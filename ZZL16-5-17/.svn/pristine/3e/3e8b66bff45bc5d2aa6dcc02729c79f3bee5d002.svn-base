@@ -1,0 +1,5 @@
+package productManage.service.conditionSheets;
+
+public interface PhaseConditionService {
+
+}

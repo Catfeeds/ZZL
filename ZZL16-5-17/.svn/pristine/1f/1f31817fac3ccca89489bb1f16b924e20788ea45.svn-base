@@ -1,0 +1,363 @@
+package productManage.action.warehouse;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.PageAction;
+import productManage.model.User;
+import productManage.model.lhj.Bom;
+import productManage.model.lhj.Material;
+import productManage.model.lhj.Supply;
+import productManage.model.lhj.WareHouse;
+import productManage.model.tms.Design;
+import productManage.model.tyc.Purchase;
+import productManage.model.wjx.MaterialInput;
+import productManage.model.wjx.MaterialOutput;
+import productManage.model.wjx.Store;
+import productManage.model.yk.Orders;
+import productManage.model.zky.Production;
+import productManage.service.material.MaterialService;
+import productManage.service.purchase.PurchaseService;
+import productManage.service.technique.DesignService;
+import productManage.service.warehouse.WarehouseManagerService;
+import productManage.vo.warehouse.MaterialAndVendor;
+
+
+/**
+ * @author WHQ
+ * @date 创建时间2016-3-28
+ */
+public class MaterialInAction extends PageAction{
+	
+	@Autowired
+	private WarehouseManagerService warehouseservice;
+	@Autowired
+	private MaterialService materialservice;
+	@Autowired
+	private PurchaseService purchaseservice;
+	@Autowired
+	private DesignService designservice;
+	private String date="";
+	private String materialCode;
+	private String materialType;
+	private String designCode;
+	private String purchaseCode;
+	
+    /**
+     * 用于ajax的参数传递：根据日期获取该日期下的详细出库单
+     */
+	private String dateAjax;
+	private String inputDateDetailAjax;
+	private String materialCodeAjax;
+	private String vendorNameAjax;
+	private String materialDetailAjax;
+	public String showAllMaterials(){
+		System.out.println("enter showAllMaterials");
+		this.pageBean=warehouseservice.getAllInStores(this.page,this.rowsPerPage);
+		List<Object[]> queryResults=pageBean.getList();
+		List<Material> m=new ArrayList<Material>();
+		for(Object o:queryResults){
+			m.add(((Store) o).getMaterial());
+		}
+		List<MaterialAndVendor> mnv=materialConversion(m);
+		this.pageBean.setList(mnv);
+		return "success";
+	}
+	
+	public String searchMaterial(){
+		System.out.println("enter serachMaterial");
+		List<Material> result1=new ArrayList<Material>();
+		List<Material> result2=new ArrayList<Material>();
+		List<Material> result3=new ArrayList<Material>();
+		List<Material> result4=new ArrayList<Material>();
+		
+		result1.add(materialservice.getMaterialByCode(materialCode));
+		
+		Design d1=designservice.getByCode(designCode);
+		Set<Bom> b1=d1.getBoms();
+		for(Bom b:b1){
+			result2.add(b.getMaterial());
+		}
+				
+		Purchase purchase=purchaseservice.getPurchaseByCode(purchaseCode);		
+			Production production=purchase.getProduction();
+			Set<Orders> orders=production.getOrders();
+			System.out.println("orders length"+orders.size());
+			for(Orders o:orders){
+				Design d=o.getDesign();
+				System.out.println("designcode"+d.getDesignCode());
+					Set<Bom> boms=d.getBoms();
+					System.out.println("boms length"+boms.size());
+					for(Bom b:boms){
+						Material m=b.getMaterial();
+						result3.add(m);			
+					}
+			}
+			
+			
+		
+
+		
+		List<MaterialAndVendor> mnv=materialConversion(result1);
+		this.pageBean.setList(mnv);
+		return "success";
+	}
+	
+	
+	
+	public  String materialDetail(){
+		System.out.println("enter materialDetail");
+		
+		Material m=materialservice.getMaterialByCode(materialCodeAjax);
+
+		System.out.println("materialname:  "+m.getMaterialName()+"  vendorname:  "+vendorNameAjax);
+		JSONArray json = new JSONArray();
+    	try{
+    		JSONObject jo=new JSONObject();
+    		JSONObject material=new JSONObject();
+    		JSONObject vendor=new JSONObject();
+    		Set<Supply> supply=m.getSupplys();
+    		for(Supply s:supply){
+    			if(s.getVendor().getVendorName().equals(vendorNameAjax)){
+    				
+    		    	material.put("materialName", m.getMaterialName());
+    		    	material.put("materialCode", m.getMaterialCode());
+    		    	material.put("colorCode", m.getColorCode());
+    		    	material.put("modificationDate",m.getModificationDate());
+    		    	vendor.put("vendorName",s.getVendor().getVendorName());
+    		    	vendor.put("vendorMobile",s.getVendor().getVendorMobileNum());
+    		    	vendor.put("vendorAddr",s.getVendor().getVendorAddr());
+    		    	break;
+    			}
+    		}	
+    		Set<Store> store=m.getStores();
+    		Store firststore = null;
+    		for(Store s:store){
+    			firststore=s;
+    			break;
+    		}
+    		int max=firststore.getWarehouse().getMaxCapacity();
+    		int remainVol=(int) firststore.getRemainVol();
+    		List<String> location=new ArrayList<String>();
+    		for(Store s:store){
+    			location.add(s.getWarehouse().getLocation());
+    		}
+    		
+	    	jo.put("material",material);
+	    	jo.put("vendor",vendor);
+	    	jo.put("location",location);
+	    	jo.put("remainVol",remainVol);
+	    	jo.put("remain", max);
+	    	json.put(jo);
+    	} catch (JSONException e) {
+    		e.printStackTrace();
+    	}
+    	setMaterialDetailAjax(json.toString());
+		return SUCCESS;
+	}
+
+	public List<MaterialAndVendor> materialConversion(List<Material> material){
+		List<MaterialAndVendor> result=new ArrayList<MaterialAndVendor>();
+		for(Material m:material){
+			Set<Supply> supply=m.getSupplys();
+			
+			for(Supply s:supply){
+				MaterialAndVendor mnv=new MaterialAndVendor();
+				mnv.setMaterialCode(m.getMaterialCode());				
+				mnv.setMaterialName(m.getMaterialName());
+				mnv.setMaterialType(m.getMaterialType());
+				mnv.setColorCode(m.getColorCode());
+				mnv.setColorDescription(m.getColorDescription());
+				mnv.setVendor(s.getVendor());
+				System.out.println(s.getVendor().getVendorName());
+				result.add(mnv);
+			}
+		}
+		
+		return result;
+		
+	}
+	
+	
+	public String materialInManage(){
+		System.out.println("enter materialInManage");
+    	Calendar calendar = Calendar.getInstance();
+    	System.out.println(getDate());
+    	if(getDate().equals("")||getDate() == null){
+    		calendar = null;
+    	}else{
+    		//时间用-分割
+    		String[] dates = getDate().split("-");
+    		calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1])-1, Integer.parseInt(dates[2]));
+    	}
+    	this.pageBean = warehouseservice.getMaterialInputList(calendar, this.page, this.rowsPerPage);
+    	setDate("");
+
+		return "success";
+	}
+	
+	public String materialInDetail(){
+		Calendar cal = Calendar.getInstance();
+    	String[] dates = getDateAjax().split("-");
+    	cal.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1])-1, Integer.parseInt(dates[2]));
+    	List<MaterialInput> results = warehouseservice.getMaterialInputList(cal);
+    	System.out.println("in action ajax0"+getDateAjax());
+    	JSONArray json = new JSONArray();
+    	try {
+	    	for(MaterialInput mo:results){
+	    		Material materialT = mo.getMaterial();
+	    		WareHouse warehouseT = mo.getWarehouse();
+	    		User userT = mo.getUser();
+	    		Store storeT = warehouseservice.getStore(mo.getMaterial().getMaterialCode(), mo.getWarehouse().getWarehouseid());
+	    		JSONObject jo = new JSONObject();
+	    		JSONObject material = new JSONObject();
+	    		JSONObject warehouse = new JSONObject();
+	    		JSONObject user = new JSONObject();
+	    		JSONObject store = new JSONObject();
+	    		jo.put("material", material);
+	    		jo.put("warehouse", warehouse);
+	    		jo.put("user", user);
+	    		jo.put("store", store);
+	    		material.put("materialName", materialT.getMaterialName());
+	    		material.put("materialCode", materialT.getMaterialCode());
+//	    		material.put("materialIngredient", materialT.getMaterialIngredient());
+//	    		material.put("unitPrice", materialT.getUnitPrice());
+//	    		material.put("materialType", materialT.getMaterialType());
+//	    		material.put("colorCode", materialT.getColorCode());
+//	    		material.put("colorDescription", materialT.getColorDescription());
+	    		warehouse.put("warehouseid", warehouseT.getWarehouseid());
+	    		warehouse.put("location", warehouseT.getLocation());
+	    		warehouse.put("remain", warehouseT.getRemain());
+	    		user.put("userName", userT.getUserName());
+	    		store.put("remainVol", storeT==null?"":storeT.getRemainVol());
+	    		jo.put("materialInputVol", mo.getMaterialInputVol());
+	    		json.put(jo);
+	    	}
+    	} catch (JSONException e) {
+    		e.printStackTrace();
+    	}
+    	setInputDateDetailAjax(json.toString());
+    	return SUCCESS;
+	}
+	
+	
+
+	public WarehouseManagerService getWarehouseservice() {
+		return warehouseservice;
+	}
+
+	public void setWarehouseservice(WarehouseManagerService warehouseservice) {
+		this.warehouseservice = warehouseservice;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getMaterialCode() {
+		return materialCode;
+	}
+
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
+	}
+
+	public String getDateAjax() {
+		return dateAjax;
+	}
+
+	public void setDateAjax(String dateAjax) {
+		this.dateAjax = dateAjax;
+	}
+
+	public String getInputDateDetailAjax() {
+		return inputDateDetailAjax;
+	}
+
+	public void setInputDateDetailAjax(String inputDateDetailAjax) {
+		this.inputDateDetailAjax = inputDateDetailAjax;
+	}
+
+	public String getMaterialCodeAjax() {
+		return materialCodeAjax;
+	}
+
+	public void setMaterialCodeAjax(String materialCodeAjax) {
+		this.materialCodeAjax = materialCodeAjax;
+	}
+
+	public String getMaterialDetailAjax() {
+		return materialDetailAjax;
+	}
+
+	public void setMaterialDetailAjax(String materialDetailAjax) {
+		this.materialDetailAjax = materialDetailAjax;
+	}
+
+	public MaterialService getMaterialservice() {
+		return materialservice;
+	}
+
+	public void setMaterialservice(MaterialService materialservice) {
+		this.materialservice = materialservice;
+	}
+
+	public String getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
+	}
+
+	public String getDesignCode() {
+		return designCode;
+	}
+
+	public void setDesignCode(String designCode) {
+		this.designCode = designCode;
+	}
+
+	public String getPurchaseCode() {
+		return purchaseCode;
+	}
+
+	public void setPurchaseCode(String purchaseCode) {
+		this.purchaseCode = purchaseCode;
+	}
+
+	public PurchaseService getPurchaseservice() {
+		return purchaseservice;
+	}
+
+	public void setPurchaseservice(PurchaseService purchaseservice) {
+		this.purchaseservice = purchaseservice;
+	}
+
+	public String getVendorNameAjax() {
+		return vendorNameAjax;
+	}
+
+	public void setVendorNameAjax(String vendorNameAjax) {
+		this.vendorNameAjax = vendorNameAjax;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}

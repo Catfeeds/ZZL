@@ -1,0 +1,11 @@
+package productManage.service.technique;
+
+import productManage.model.tms.TechniqueInventory;
+
+/**
+ * @author TMS
+ * @date 2016-2-29
+ */
+public interface TechniqueInventoryService {
+	public void save(TechniqueInventory techniqueInventory);
+}

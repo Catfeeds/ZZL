@@ -1,0 +1,235 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<jsp:include page="../../header.jsp"></jsp:include>
+<title>ZZL-采购单管理</title>
+<style type="text/css">
+        .content{_height: 1000px;min-height:1000px;padding: 30px 25px;}
+.input-group,.form-group{position: relative;float: left;width: 15%;}
+.form-control{float: left;width: 100%;}
+label {color: #555555;font-size: 12px; margin-left: 10px;}
+#search-purchaselist{position: relative;float: left;width: 8%;height:34px;margin-left: 15px;margin-top: 23px;}
+.table-responsive{margin-top: 10px;}
+.table{border-top: 3px solid #7D9EC0;}
+th{font-size: 12px;color: #4F4F4F;text-align: center;}
+td{text-align: center;font-size:14px;}
+tr{background-color:transpare}
+.item-name{color:#0000ff;}
+.qcCode{color:#008080;}
+.commdity-graph{width: 60px;height: 80px;}
+    </style>
+</head>
+<body class="skin-blue">
+
+  <header class="header">
+     <a href="index.html" class="logo">
+          <!-- Add the class icon to your logo image or logo icon to add the margining -->
+                 智&nbsp造&nbsp链
+          </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+        </nav>
+  </header>
+  
+<div class="wrapper row-offcanvas row-offcanvas-left">
+	<!-- Left side column. contains the logo and sidebar -->
+	<jsp:include page="../../navigation.jsp"></jsp:include> 
+	<!-- Right side column. Contains the navbar and content of the page -->
+	<aside class="right-side">
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+	<h1>
+                                                                        采购管理
+                    <small>面料采购单管理</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="<%=request.getContextPath()%>"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">面料采购单管理</li>
+                </ol>
+	
+            </section>
+            <!-- Main content -->
+            <section class="content">
+            <!-- 查询 -->
+                                <form  role="form" method="post" action="<%=request.getContextPath()%>/Qc/search_qclist">
+                               		<div class="row col-md-12">
+                                                <div class="input-group">
+				                                <label for="name">款号</label> <input id="designCode" name="designCode"
+					                            type="text" class="form-control form-input" placeholder="款号"
+					                            maxlength="20">
+			                                    </div>
+			                                    <div class="input-group">
+				                                <label for="name">供应商</label> <input id="vendor" name="vendor"
+					                            type="text" class="form-control form-input" placeholder="供应商"
+					                            maxlength="20">
+			                                    </div>
+                                                <div class="input-group">
+				                                <label for="name">计划采购时间</label> <input id="scheduledPurchaseDate" name="scheduledPurchaseDate"
+					                            type="text" class="form-control form-input" placeholder="计划采购时间"
+					                            maxlength="20">
+			                                    </div>
+			                                    <div class="input-group">
+				                                <label for="name">预计到货时间</label> <input id="eta" name="eta"
+					                            type="text" class="form-control form-input" placeholder="预计到货时间"
+					                            maxlength="20">
+			                                    </div>
+                                                <div class="form-group">
+					                            <label for="name">待操作状态</label> <select id="purchaseState" name="purchaseState"
+						                        class="form-control">
+						                        <option>待审核</option>
+						                        <option>待库存审核</option>
+						                        <option>待电话订购</option>
+						                        <option>待传码单</option>
+						                        <option>待财务核对</option>
+						                        <option>待核对面料</option>
+						                        <option>采购完成（自有）</option>
+						                        <option>审核不通过</option>
+					                            </select>
+				                                </div>
+				                                <div class="form-group">
+					                            <label for="name">新老款</label> <select id="oldOrNew" name="oldOrNew"
+						                        class="form-control">
+						                        <option>新款</option>
+						                        <option>老款</option>
+						                       
+					                            </select>
+				                                </div>
+                                  
+                                            
+                                                <button type="submit"  id="search-purchaselist"
+				                                class="btn btn-primary">查询</button>
+                                </div>
+                                </form>
+							     
+							     <div class="row col-md-12">
+							     <div class="col-md-1">
+	                             <button class="btn btn-primary" type="submit" data-toggle="modal" onclick="javascript:getAllCharge(1,<s:property value="#purchase"/>);" data-target="#addProcessor">用料审核</button>
+	                             </div>
+	                             <div class="col-md-1">
+	                             <button class="btn btn-primary" type="submit">库存审核</button>
+	                             </div>
+	                             <div class="col-md-1">
+	                             <button class="btn btn-primary" type="submit">电话订购</button>
+	                             </div>
+	                             <div class="col-md-1">
+	                             <button class="btn btn-primary" type="submit">传码单</button>
+	                             </div>
+	                             <div class="col-md-1">
+	                             <button class="btn btn-primary" type="submit">财务对账</button>
+	                             </div>
+	                             <div class="col-md-1">
+	                             <button class="btn btn-primary" type="submit">核对面料</button>
+	                             </div>
+							     </div>
+							     
+					                <div class="row">
+					                                <div class="table-responsive" style="margin: 0px 50px 50px 23px">
+					                                    <table class="table table-striped">
+					                                        <tr>
+					                                            <th></th>
+					                                            <th>图片</th>
+					                                            <th>采购单信息</th>
+					                                            <th>款式信息</th>
+					                                            <th>采购日期</th>
+					                                            <th>供应商</th>
+					                                            <th>状态</th>
+					                                            <th>待操作</th>
+					                                        </tr>                                       
+					                                        <s:iterator value="purchaseList" var="purchase">
+					                                        <tr>
+					                                            <td><input type="radio" name="select"></td>
+					                                            <td><img src="../images/1.png"class="commdity-graph">                      
+					                                            <td><a href="<%=request.getContextPath()%>/Purchase/purchaseDetail?purchaseID=<s:property value="#purchase.purchaseID" />"><s:property value="#purchase.purchaseCode" /></a>
+					                                            <br/>
+					                                            <s:iterator value="#purchase.production.orders" id="set">
+					                                            <s:property value="#set.orderPriority"/>
+					                                            </s:iterator>
+					                                            </td>
+					                                            <td>款号：
+					                                            <s:iterator value="#purchase.production.orders" id="set">
+					                                            <s:property value="#set.design.designCode"/>
+					                                            </s:iterator>
+					                                            <br/>
+					                                            <s:iterator value="#purchase.production.orders" id="set">
+					                                            <s:if test="#set.orderDesignIsNew==1">新款</s:if>
+					                                            <s:else>老款</s:else>
+					                                            </s:iterator>
+					                                            <br/>款名：
+					                                            <s:iterator value="#purchase.production.orders" id="set">
+					                                            <s:property value="#set.design.designName"/>
+					                                            </s:iterator>
+					                                            </td>
+					                                            <td><s:property value="#purchase.ScheduledPurchaseDate" />
+					                                            <br/>负责人：<s:property value="#purchase.user.userName" />
+					                                            </td>
+					                                            <td>
+					                                            
+					                                           	 供应商：<s:iterator value="#purchase.vendors" id="set">
+					                                            <s:property value="#set.vendorName"/>
+					                                            </s:iterator>
+					                                            <br/>
+													                                     电话：<s:iterator value="#purchase.vendors" id="set">
+					                                            <s:property value="#set.vendorPhoneNum"/>
+					                                            </s:iterator>
+					                                            </td>
+					                                            <td><s:property value="#purchase.purchaseState" /></td>
+					                                            <td><s:property value="#purchase.purchaseState" /></td>
+					                                        </tr>
+					                                        </s:iterator>
+					                                        
+					                                    </table>
+					                                </div>
+					                            </div>
+            </section>
+	
+	</aside>
+
+</div>
+
+<!-- 模态框（Modal） -->
+	<div class="modal fade" id="addProcessor" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" >
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #3c8dbc">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" style="color: white">用料审核</h4>
+				</div>
+				<div class="modal-body">
+                    
+                     <div class="table-responsive" style="margin-top:50px;">
+                     <table class="table table-striped" id="chargetable">
+                            <thead>
+                            <tr>
+                                <th>物料编号</th>
+                                <th>物料名称</th>
+                                <th>主/辅料</th>
+                                <th>色号</th>
+                                <th>单价</th>
+                                <th>单件用量</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="userTabel">
+                            </tbody>
+                            
+                        </table><!-- /.table -->
+						</div>
+						</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">关闭
+					</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+</body>
+</html>

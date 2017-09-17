@@ -1,0 +1,13 @@
+package productManage.service.material;
+
+import java.util.Map;
+
+import productManage.model.lhj.Material;
+import productManage.vo.PageBean;
+
+public interface MaterialService {
+	
+	public void addMaterial(Material material);
+	
+	public PageBean queryMaterial(int pageSize, int page, Map<String, Object> params);
+}

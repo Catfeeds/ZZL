@@ -1,0 +1,54 @@
+package productManage.service.supplement.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.szl.SupplementDao;
+import productManage.dao.szl.SupplementMaterialDao;
+import productManage.model.lhj.Material;
+import productManage.model.szl.Supplement;
+import productManage.model.szl.SupplementMaterial;
+import productManage.service.supplement.SupplementCreateService;
+
+/**
+ * @author SZL
+ * @date 2016-3-23
+ */
+
+@Service
+public class SupplementCreateServiceImpl implements SupplementCreateService{
+	@Autowired
+	private SupplementDao supplementDao;
+	public void setSupplementDao(SupplementDao supplementDao){
+		this.supplementDao=supplementDao;
+	}
+	public SupplementDao getSupplementDao(){
+		return supplementDao;
+	}
+	
+	@Autowired
+	private SupplementMaterialDao supplementMaterialDao;
+	public void setSupplementMaterialDao(SupplementMaterialDao supplementMaterialDao){
+		this.supplementMaterialDao=supplementMaterialDao;
+	}
+	public SupplementMaterialDao getSupplementMaterialDao(){
+		return supplementMaterialDao;
+	}
+	
+	@Override
+	public void createSupplement(Supplement supplement){
+		supplementDao.add(supplement);
+	}
+	@Override
+	public void createSupplementMaterial(SupplementMaterial supplementMaterial){
+		supplementMaterialDao.add(supplementMaterial);
+	}
+	@Override
+	public List<Material> getMaterial(String materialCode,String materialName,String materialType){
+		return null;
+		
+	}
+	
+}

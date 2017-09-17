@@ -1,0 +1,109 @@
+package productManage.action.technique;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.BaseAction;
+import productManage.model.tms.Technique;
+import productManage.model.tms.TechniqueInventory;
+import productManage.service.technique.TechniqueInventoryService;
+import productManage.service.technique.TechniqueService;
+
+/**
+ * @author TMS
+ * @date 2016-2-29
+ */
+public class AddTechniqueAction extends BaseAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Autowired
+	private TechniqueService techniqueService;
+	
+	public TechniqueService getTechniqueService() {
+		return techniqueService;
+	}
+
+	public void setTechniqueService(TechniqueService techniqueService) {
+		this.techniqueService = techniqueService;
+	}
+	@Autowired
+	private TechniqueInventoryService techniqueInventoryService;
+	public TechniqueInventoryService getTechniqueInventoryService() {
+		return techniqueInventoryService;
+	}
+
+	public void setTechniqueInventoryService(TechniqueInventoryService techniqueInventoryService) {
+		this.techniqueInventoryService = techniqueInventoryService;
+	}
+	
+	public String initAddTechnique(){
+		return SUCCESS;
+	}
+	public String execute() throws ServletException, IOException{
+		//ServletContext sc = request.getServletContext();
+		String techCode = request.getParameter("techCode");
+		String designCode = request.getParameter("designCode");
+		String processorName = request.getParameter("processorName");
+		String techDate = request.getParameter("techDate");
+		String technique = request.getParameter("technique");
+		String techShellType = request.getParameter("techShellType");
+		String techSampleSize = request.getParameter("techSampleSize");
+		int techModelFinish = Integer.parseInt(request.getParameter("techModelFinish"));
+		String techJointSize = request.getParameter("techJointSize");
+		String techLineDistance = request.getParameter("techLineDistance");
+		String techPressingReq = request.getParameter("techPressingReq");
+		String techComment = request.getParameter("techComment");
+		 
+		String techInPartName = request.getParameter("techInPartName");
+		String techInMCode = request.getParameter("MCode");
+		float techInTolerance = Float.parseFloat(request.getParameter("techInTolerance"));
+		
+		int customerID = findCustomerID(processorName);
+		int designID = findDesignID(designCode);
+		Date date = string_to_Date(techDate);
+		
+		
+		Technique new_technique = new Technique();
+		new_technique.setTechCode(techCode);
+//		new_technique.setDesignID(designID);
+//		new_technique.setCustomerID(customerID);
+		new_technique.setTechDate(date);
+		new_technique.setTechnique(technique);
+		new_technique.setTechShellType(techShellType);
+		new_technique.setTechSampleSize(techSampleSize);
+		new_technique.setTechModelFinish(techModelFinish);
+		new_technique.setTechJointSize(techJointSize);
+		new_technique.setTechLineDistance(techLineDistance);
+		new_technique.setTechPressingReq(techPressingReq);
+		new_technique.setTechComment(techComment);
+		techniqueService.save(new_technique);
+		
+		List<Technique> temp_List = techniqueService.getAll();
+		int techID = temp_List.get(temp_List.size()-1).getTechid();
+		
+		TechniqueInventory techniqueInventory = new TechniqueInventory();
+		techniqueInventory.setTechid(techID);
+		techniqueInventory.setTechInMCode(techInMCode);
+		techniqueInventory.setTechInPartName(techInPartName);
+		techniqueInventory.setTechInTolerance(techInTolerance);
+		techniqueInventoryService.save(techniqueInventory);
+		return SUCCESS;
+	}
+
+	public Date string_to_Date(String techDate){
+		return null;
+	}
+	public int findCustomerID(String customerName){
+		return 0;
+	}
+	public int findDesignID(String designCode){
+		return 0;
+	}
+}

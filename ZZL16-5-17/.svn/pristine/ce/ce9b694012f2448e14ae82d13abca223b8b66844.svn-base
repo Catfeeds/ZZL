@@ -1,0 +1,125 @@
+package productManage.action.sample;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.PageAction;
+import productManage.service.sample.SampleManageService;
+
+/**
+ * @author WHQ
+ * @date 创建时间2016-3-8
+ */
+public class SampleAction extends PageAction{
+	@Autowired
+	private SampleManageService samplemanageservice;
+	
+	private String designID;
+	private String sampleTime;
+	private String samplePlace;
+	private String sampleOPComment;
+	
+	//样衣筛选条件:
+	private String searchSamplePlace;
+	private String searchDesignCode;
+	private String searchSampleState;
+	
+	public String addSample(){
+		System.out.println("enter addSample action");
+		return "success";
+	}
+	
+	public String addInSample(){
+		System.out.println("enter addInSample action");
+		System.out.println(designID);
+		
+		
+		samplemanageservice.SampleInput(designID,sampleTime,samplePlace,sampleOPComment);
+		return "success";
+	}
+	
+	//---------------以下为样衣管理-----------------
+	public String showAllSamples(){
+		pageBean = samplemanageservice.showAllSamples(this.rowsPerPage, this.page);
+		return "success";
+	}
+	
+	public String showSamplesByFilter(){
+		Map filter = new HashMap();
+		filter.put("samplePlace", searchSamplePlace);
+		filter.put("designCode", searchDesignCode);
+		filter.put("sampleState", searchSampleState);
+		pageBean = samplemanageservice.showSamplesByFilter(this.rowsPerPage, this.page, filter);
+		return "success";
+	}
+	
+	
+	public SampleManageService getSamplemanageservice() {
+		return samplemanageservice;
+	}
+
+	public void setSamplemanageservice(SampleManageService samplemanageservice) {
+		this.samplemanageservice = samplemanageservice;
+	}
+
+	public String getDesignID() {
+		return designID;
+	}
+
+	public void setDesignID(String designID) {
+		this.designID = designID;
+	}
+
+	public String getSampleTime() {
+		return sampleTime;
+	}
+
+	public void setSampleTime(String sampleTime) {
+		this.sampleTime = sampleTime;
+	}
+
+	public String getSamplePlace() {
+		return samplePlace;
+	}
+
+	public void setSamplePlace(String samplePlace) {
+		this.samplePlace = samplePlace;
+	}
+
+	public String getSampleOPComment() {
+		return sampleOPComment;
+	}
+
+	public void setSampleOPComment(String sampleOPComment) {
+		this.sampleOPComment = sampleOPComment;
+	}
+
+
+	public String getSearchDesignCode() {
+		return searchDesignCode;
+	}
+
+	public void setSearchDesignCode(String searchDesignCode) {
+		this.searchDesignCode = searchDesignCode;
+	}
+
+	public String getSearchSamplePlace() {
+		return searchSamplePlace;
+	}
+
+	public void setSearchSamplePlace(String searchSamplePlace) {
+		this.searchSamplePlace = searchSamplePlace;
+	}
+
+	public String getSearchSampleState() {
+		return searchSampleState;
+	}
+
+	public void setSearchSampleState(String searchSampleState) {
+		this.searchSampleState = searchSampleState;
+	}
+	
+	
+}

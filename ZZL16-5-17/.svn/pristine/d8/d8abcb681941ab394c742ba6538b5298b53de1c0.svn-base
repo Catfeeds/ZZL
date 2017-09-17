@@ -1,0 +1,110 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    
+    <!-- css,js 引包 -->
+    <jsp:include page="../../header.jsp"></jsp:include>
+
+    <title>ZZL</title>
+</head>
+
+<body class="skin-blue">
+    <!-- header logo: style can be found in header.less -->
+    <header class="header">
+        <a href="index.jsp" class="logo">
+        <!-- Add the class icon to your logo image or logo icon to add the margining -->
+            智&nbsp造&nbsp链
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+        </nav>
+    </header>
+
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <!-- 左边导航栏  -->
+        <jsp:include page="../../navigation.jsp"></jsp:include>
+        
+        <!-- Right side column. Contains the navbar and content of the page -->
+        <aside class="right-side">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    物料管理
+                    <small>物料新增</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i>物料管理</a></li>
+                    <li class="active">物料新增</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-primary">
+
+                            <div class="box-header">
+                                <h3 class="box-title">物料新增</h3>
+                            </div>
+
+                            <form role="form" method="post" action="<%=request.getContextPath()%>/Material/addMaterial">
+                                <div class="table-responsive" style="margin: 0px 50px 50px 25px">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                        <tr>
+                                            <td><label>物料编号</label></td>
+                                            <td><input type="text" class="form-control" id="materialCode" name="materialCode"><td>
+                                            <td><label>物料名称</label></td>
+                                            <td><input type="text" class="form-control" id="materialName" name="materialName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>物料类型</label></td>
+                                            <td><input type="text" class="form-control" id="materialType" name="materialType"></td>
+                                            <td><label>色号</label></td>
+                                            <td><input type="text" class="form-control" id="colorCode" name="colorCode"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>颜色说明</label></td>
+                                            <td><input type="text" class="form-control" id="colorDescription" name="colorDescription"></td>
+                                            <td><label>物料成分</label></td>
+                                            <td><input type="text" class="form-control" id="materialIngredient" name="materialIngredient"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>单价</label></td>
+                                            <td><input type="text" class="form-control" id="unitPrice" name="unitPrice"></td>
+                                            <td><label>单位</label></td>
+                                            <td><input type="text" class="form-control" id="unit" name="unit"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>门幅</label></td>
+                                            <td><input type="text" class="form-control" id="width" name="width"></td>
+                                            <td><label>出量</label></td>
+                                            <td><input type="text" class="form-control" id="outputVol" name="outputVol"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>修改时间</label><td>
+                                            <td><input type="text" class="form-control" id="modificationDate" name="modificationDate"><td>
+                                            <td><button type="submit" id="confirmAdd" class="btn btn-primary">确定</button><td>
+                                            <td><button class="btn btn-primary">取消</button><td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            
+            </section>
+        </aside>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+package productManage.action;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.model.User;
+import productManage.service.system.UserService;
+
+public class LoginAction extends BaseAction{
+	@Autowired
+	private UserService userService;
+
+	public String login(){
+		String account = request.getParameter("account");
+		String password = request.getParameter("password");
+		boolean loginResult = userService.login(account, password);
+		if (loginResult){
+			request.getSession().setAttribute("account", account);
+			try {
+				response.sendRedirect(request.getContextPath()+"/index.jsp");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return SUCCESS;
+		}
+		else 
+			return ERROR;
+	}
+	
+	public String loginOut(){
+		request.getSession().removeAttribute("account");
+		return SUCCESS;
+		
+	}
+	
+	public boolean isOnline(){
+		if (request.getSession().getAttribute("account")!=null)
+			return true;
+		else
+			return false;
+	}
+	
+}

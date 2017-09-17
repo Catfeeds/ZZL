@@ -1,0 +1,14 @@
+package productManage.action.conditionSheets;
+
+import productManage.action.PageAction;
+
+public class PhaseConditionAction extends PageAction {
+	
+	private static final long serialVersionUID = 1L;
+	
+	public String phaseCondition(){
+		
+		return SUCCESS;
+	}
+
+}

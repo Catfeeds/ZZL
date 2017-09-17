@@ -1,0 +1,179 @@
+package productManage.service.qc.impl;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.BaseDao;
+import productManage.dao.tms.InquiryDAO;
+import productManage.dao.wcy.QcDAO;
+import productManage.model.User;
+import productManage.model.tms.Design;
+import productManage.model.wcy.Qc;
+import productManage.model.yk.OrderDetail;
+import productManage.model.yk.Orders;
+import productManage.model.yrd.Customer;
+import productManage.service.PageService;
+import productManage.service.qc.QcService;
+import productManage.vo.PageBean;
+import productManage.vo.qc.DesignConstants;
+import productManage.vo.qc.QCVO;
+import productManage.vo.system.ChargeConstants;
+@Service
+public class QcServiceImpl implements QcService{
+
+	@Autowired
+	private QcDAO qcDao;
+	@Autowired
+	private BaseDao baseDao;
+	@Autowired
+	PageService pageService;
+	public QcDAO getQcDao() {
+		return qcDao;
+	}
+
+	public void setQcDao(QcDAO qcDao) {
+		this.qcDao = qcDao;
+	}
+	
+	@Override
+	public void add(Qc qc) {
+		// TODO Auto-generated method stub
+		qcDao.add(qc);
+	}
+
+
+
+	@Override
+	public Design getDesignPic(String designCode) {
+		// TODO Auto-generated method stub
+		return qcDao.getDesignPic(designCode);
+	}
+
+	
+
+	@Override
+	public Customer getCustomerName(int customerID) {
+		// TODO Auto-generated method stub
+		return qcDao.getCustomerName(customerID);
+	}
+
+	@Override
+	public void update(Qc qc) {
+		// TODO Auto-generated method stub
+		qcDao.update(qc);;
+	}
+
+	@Override
+	public List<Qc> getAll() {
+		// TODO Auto-generated method stub
+		return qcDao.getAll();
+	}
+
+	@Override
+    public PageBean getAll(int rowsPerPage, int page) {
+    	String hql = "from Qc as qc";
+    	PageBean pagebean = pageService.queryForPage(hql, rowsPerPage, page);
+    	List<Qc> qcs =pagebean.getList();
+    	/*List<Qc> qcs = baseDao.getSession().createQuery(hql).list();
+    	System.out.println("qcsvvvvvvvvvgde size"+ qcs.size());*/
+    	List<QCVO> qcVOs = new ArrayList<QCVO>();
+    	for(int i=0;i<qcs.size();i++){
+    		QCVO qcVO  = new QCVO();
+    		
+    		qcVO = qcDao.getQCVOByQc(qcs.get(i));
+    		qcVOs.add(qcVO);
+    	}
+    	
+    	pagebean.setList(qcVOs);
+    	//pagebean.setAllList(qcVOs);
+        return pagebean;
+    }
+
+	@Override
+	public List<Qc> get(String designCode,String qCDesignateTime,String userName,String qCState) {
+		// TODO Auto-generated method stub
+		return qcDao.get(designCode, qCDesignateTime, userName, qCState);
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		// TODO Auto-generated method stub
+		return qcDao.getAllUsers();
+	}
+
+	@Override
+	public List<User> getUserByName(String username) {
+		// TODO Auto-generated method stub
+		return qcDao.getUserByName(username);
+	}
+
+	@Override
+	public PageBean getSearched(int page, int rowsPerPage,String designCode,String pQCTime,String userName,String qCState) {
+		
+		String hql = "select q from Qc q,Orders o where q.QCState = '"+qCState+"' and q.production.pQCTime = '"+pQCTime+"' and q.user.userName= '"+userName+"' and o.production.productionID = q.production.productionID and o.design.designCode= '"+designCode+"'";
+		//String hql = " from Qc  where Qc.qCState = '"+qCState+"' and Qc.production.pQCTime = '"+pQCTime+"' and Qc.user.userName= '"+userName+"' join Orders with Orders.production.productionID = Qc.production.productionID where Orders.design.designCode= '"+designCode+"'";
+    	PageBean pagebean = pageService.queryForPage(hql, rowsPerPage, page);
+		List<Qc> qcs = pagebean.getList();
+    	List<QCVO> qcVOs = new ArrayList<QCVO>();
+    	for(int i=0;i<qcs.size();i++){
+    		QCVO qcVO  = new QCVO();
+    		
+    		qcVO = qcDao.getQCVOByQc(qcs.get(i));
+    		qcVOs.add(qcVO);
+    	}
+    	System.out.println("qcsjiiiiie size"+ qcVOs.size());
+    	pagebean.setList(qcVOs);
+        return pagebean;
+		
+	}
+
+	@Override
+	public QCVO getQCVO(Qc qc) {
+		
+		return qcDao.getQCVOByQc(qc);
+	}
+
+	@Override
+	public String addresult(Qc qc) {
+		
+		return qcDao.update(qc);
+	}
+
+	public Qc getQcById(int qcID){
+		return qcDao.getQcById(qcID);
+	}
+	public void setCharge(int userId,int qcID){
+		 qcDao.setCharge(userId,qcID);
+	}
+
+	@Override
+	public PageBean getDesignByPage(int rowsPerPage, int page,
+			Map<String, Object> params) {
+		String hql = "select orders from Production as production ,Orders as orders";
+		String designCode = (String) params.get(DesignConstants.SEARCH_DESIGN_PARAMS[0]);
+		if (!designCode.isEmpty()) {
+			hql += " where production.productionID= orders.production.productionID and orders.design.designCode='"+designCode+"'";
+		}
+		return pageService.queryForPage(hql, rowsPerPage, page);
+	
+	}
+
+	@Override
+	public QCVO getQCVOByOrder(int orderID) {
+		// TODO Auto-generated method stub\
+		return qcDao.getQCVOByOrder(orderID);
+		
+	}
+
+	@Override
+	public User getUserByAccount(String account) {
+		return qcDao.getUserByAccount(account);
+	}
+	
+
+}

@@ -1,0 +1,100 @@
+package productManage.service.designOrder.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.wcy.OrderDetailDAO;
+import productManage.dao.wcy.OrdersDAO;
+import productManage.model.cs.OutSourceDetail;
+import productManage.model.lhj.Vendor;
+import productManage.model.tms.Design;
+import productManage.model.yk.OrderDetail;
+import productManage.model.yk.Orders;
+import productManage.model.yrd.Customer;
+import productManage.service.designOrder.DesignOrderService;
+import productManage.service.production.ProductionService;
+
+@Service
+public class DesignOrderServiceImpl implements DesignOrderService {
+	
+	@Autowired
+	private OrdersDAO ordersDao;
+	public ProductionService getProductionService() {
+		return productionService;
+	}
+
+	public void setProductionService(ProductionService productionService) {
+		this.productionService = productionService;
+	}
+
+	public OrderDetailDAO getOrderDetailDao() {
+		return orderDetailDao;
+	}
+
+	public void setOrderDetailDao(OrderDetailDAO orderDetailDao) {
+		this.orderDetailDao = orderDetailDao;
+	}
+
+	@Autowired
+	private ProductionService productionService;
+	@Autowired
+	private OrderDetailDAO orderDetailDao;
+
+	public OrdersDAO getOrdersDao() {
+		return ordersDao;
+	}
+
+	public void setOrdersDao(OrdersDAO ordersDao) {
+		this.ordersDao = ordersDao;
+	}
+	
+	public Design getDesignByID(int designID){
+		return ordersDao.getDesignByID(designID);
+	}
+
+	@Override
+	public Customer getCustomer(String customerBrandName) {
+		// TODO Auto-generated method stub
+		
+		return ordersDao.getCustomer(customerBrandName);
+	}
+
+	@Override
+	public Vendor getVendor(String vendorName) {
+		// TODO Auto-generated method stub
+		return ordersDao.getVendor(vendorName);
+	}
+
+	@Override
+	public void save(Orders orders) {
+		ordersDao.save(orders);
+		/**
+		 * 根据订单生成对应生产单
+		 * by zky
+		 */
+		String orderCode=orders.getOrderCode();
+		List<String> orderlist=new ArrayList<String>();
+		orderlist.add(orderCode);
+		productionService.addProduction(orderlist);
+	}
+	public void save1(Orders orders){
+		ordersDao.save(orders);
+	}
+	
+	public void update(Orders orders){
+		ordersDao.update(orders);
+	}
+
+	@Override
+	public void addOrderDetail(Orders orders, List<OrderDetail> details_add) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < details_add.size(); i++) {
+			OrderDetail od = details_add.get(i);
+			od.setOrder(orders);
+			orderDetailDao.add(od);
+		}
+	}
+}

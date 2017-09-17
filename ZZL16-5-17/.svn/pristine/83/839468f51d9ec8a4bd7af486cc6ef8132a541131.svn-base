@@ -1,0 +1,15 @@
+package productManage.service.sample;
+
+import java.util.Map;
+
+import productManage.vo.PageBean;
+
+/**
+ * @author WHQ
+ * @date 2016-03-08
+ */
+public interface SampleManageService {
+	public int SampleInput(String designID,String sampleTime,String samplePlace,String sampleOPComment);
+	public PageBean showAllSamples(int rowsPerPage,int page);
+	public PageBean showSamplesByFilter(int rowsPerPage,int page,Map filter);
+}

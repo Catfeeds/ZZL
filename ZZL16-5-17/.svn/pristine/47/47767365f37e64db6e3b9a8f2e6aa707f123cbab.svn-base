@@ -1,0 +1,38 @@
+package productManage.action.productionSchedule;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import productManage.action.PageAction;
+import productManage.service.ListManage.StartManageService;
+@Controller
+public class StartManageAction extends PageAction {
+	@Autowired
+	private StartManageService startmanageservice;
+	private String outsourceID;
+	
+	public String showAllOutSources(){
+		this.pageBean = startmanageservice.getAllOutSource(this.page, this.rowsPerPage);
+		return "success";	
+	}
+	
+	public String changeProductionState(){
+		int outsourceID = Integer.parseInt(this.outsourceID);
+		if(startmanageservice.changeProductionState(outsourceID)){
+		this.pageBean = startmanageservice.getAllOutSource(this.page, this.rowsPerPage);
+		return "success";
+		}
+		else{
+			return "false";
+		}
+	}
+
+	public String getOutsourceID() {
+		return outsourceID;
+	}
+
+	public void setOutsourceID(String outsourceID) {
+		this.outsourceID = outsourceID;
+	}
+	
+}

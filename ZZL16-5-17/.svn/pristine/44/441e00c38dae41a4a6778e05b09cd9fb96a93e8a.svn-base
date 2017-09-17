@@ -1,0 +1,335 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+
+    <jsp:include page="../../header.jsp"></jsp:include>
+
+	<style type="text/css">
+	.supplement-info {
+		text-align: right;
+		padding: 15px;
+	}
+
+	th {
+		text-align: center;
+	}
+
+	td>input {
+		width: 108px;
+	}
+	</style>
+    <title>ZZL</title>
+</head>
+
+<body class="skin-blue">
+    <!-- header logo: style can be found in header.less -->
+    <header class="header">
+        <a href="index.html" class="logo">
+        <!-- Add the class icon to your logo image or logo icon to add the margining -->
+            智&nbsp造&nbsp链
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+        </nav>
+    </header>
+
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <!-- Left side column. contains the logo and sidebar -->
+        <jsp:include page="../../navigation.jsp"></jsp:include> 
+        
+        <!-- Right side column. Contains the navbar and content of the page -->
+        <aside class="right-side">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                   	补料单
+                    <small>辅料补料单</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">Supplement</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+            	<div class="row">
+			<!-- left column -->
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="box-header">
+						<h3 class="box-title">新增辅料补料单</h3>
+					</div>
+					<!-- /.box-header -->
+					<form role="form" method="post" action="<%=request.getContextPath()%>/Supplement/addLiningSupplement">
+					<div class="row">
+						<div class="col-md-10">
+							<div class="box-body">
+							
+								<table style="padding: 15px; margin: 20px">
+									<tr>
+										<td class="supplement-info">补料类型：</td>
+										<td><select name="supplementType">
+											<option value="">请选择</option>
+											<option value="生产单补料">生产单补料</option>
+											<option value="常规性补料">常规性补料</option>										
+											</select></td>
+										<td class="supplement-info">生产单号：</td>
+										<td><input type="text" name="productionCode"></td>
+										<td class="supplement-info">物料类型：</td>
+										<td>辅料</td>
+									</tr>
+									<tr>
+										<td class="supplement-info">补料单号：</td>
+										<td><input type="text" name="supplementCode"></td>
+										<td class="supplement-info">补料日期：</td>
+										<td><input type="text" class="date-picker" name="supplementDate"></td>
+										<td class="supplement-info">补料人：</td>
+										<td><input type="text" name="userName"></td>
+									</tr>
+								</table>
+						
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-2">
+							<span size="3px" style="margin: 0px 10px 20px 20px; color: blue">面料信息>></span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive" style="margin: 10px 15px 20px 23px">
+								<table class="table table-striped" id="tab-detail">
+									<tr>
+										<th>物料名称</th>
+										<th>规格</th>
+										<th>数量</th>
+										<th>供应商</th>
+										<th>补充用途</th>
+										<th>操作</th>
+									</tr>
+									<tr id="0">
+									</tr>								
+								</table>
+								<!-- /.table -->
+								<button type="button" class="btn btn-primary" style="margin:0px 5px 5px 75px" data-toggle="modal" onclick="selectMaterial();">添加</button>&nbsp;&nbsp;
+								<button type="button" class="btn btn-danger">删除</button>
+							</div>
+							<!-- /.table-responsive -->
+						</div>
+					</div>
+					<!-- /.table-row -->
+
+
+					<div class="row">
+						<div class="col-md-10">
+							<div class="box-body">
+								<table style="padding:10px; margin:10px">
+									<tr>
+										<td class="supplement-infoMore">备注信息：</td>
+										<td><textarea type="text" style="width:200%;" name="supplementComment"></textarea></td>
+										
+									</tr>
+									
+									<tr>
+										<td>
+											<button type="submit" class="btn btn-primary" style="margin-top: 0px">提交</button>
+										</td>
+									</tr>
+
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</form>
+				
+				
+				</div>
+				
+				<!-- /.box-->
+				
+			</div>
+		</div>
+            </section>
+        </aside>
+    </div>
+
+   <!-- 模态框（Modal） -->
+	<div class="modal fade" id="selectMaterial" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="height: 250px; width: 900px">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #00c0ef">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" style="color: white">添加</h4>
+				</div>
+				<div class="modal-body">
+					<div class="table" style="margin-top: 0px;">
+						<!-- .table - Uses sparkline charts-->
+						
+							<form role="form" method="post" action="<%=request.getContextPath()%>/Supplement/addSupplementMaterial">
+							<table class="table" rules="none" frame="void">
+								<tr>
+									<td>物料类型：</td>
+									<td><select name="shellAccessoryType" id="shellAccessoryType" style="width:100px;height:28px">
+										<option value="">请选择</option>
+										<option value="里料">里料</option>
+										<option value="其他">其他</option>
+									</select>
+									</td>
+									<td>物料编号：</td>
+									<td><input type="text" name="materialCode" id="materialCode" ></td>
+									<td>物料名称：</td>
+									<td><input type="text" name="materialName" id="materialName" ></td>									
+									<td style="width:40px"></td>
+									<td><button type="submit" class="btn btn-primary" >查询</button></td>
+								</tr>								
+							</table>
+							</form>
+							<table class="table" rules="none" frame="void">
+								<tr>
+									<th>物料编码</th>									
+                                   	<th>物料名称</th>                                  	
+                                   	<th>成分含量</th>
+                                   	<th>类型</th>                                	
+                                   	<th>颜色</th>
+                                   	<th>供应商</th>
+                                   	<th></th>
+                                </tr>
+                                <tbody>
+                                <s:iterator value="PageBean.list" var="materialItem">
+										<tr onclick="javascript:judgeSelected(this)">
+											<td><s:property value="#materialItem.materialCode" /></td>
+											<td><s:property value="#materialItem.materialName" /></td>
+											<td><s:property value="#materialItem.materialIngredient" /></td>
+											<td><s:property value="#materialItem.shellAccessoryType" /></td>
+											<td><s:property value="#materialItem.colorDescription" /></td>
+											<td><s:property value="#materialItem.vendorName" /></td>
+                                			<td style=" vertical-align:middle;">
+												<input type="radio" name="select">
+												<input type="hidden" name="selectedMaterialCode" value=${materialItem.materialCode}>
+												<input type="hidden" name="selectedMaterialName" value=${materialItem.materialName}>
+												<input type="hidden" name="selectedVendorName" value=${materialItem.vendorName}>
+											</td>
+										</tr>
+								</s:iterator>
+                                </tbody>
+                                   
+							</table>
+							<!-- /.table -->
+							<jsp:include page="../../page2.jsp">
+								<jsp:param name="action" value="addSupplementMaterial" />
+						   	</jsp:include>
+							
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">添加
+					</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+<script type="text/javascript">
+	window.onload = changeTab("10900","10902");
+	$('.date-picker').datetimepicker({
+ 		language:  'zh-CN',
+  	  format : 'yyyy-mm-dd',
+  	  weekStart : 1,
+  	  todayBtn : 1,
+  	  autoclose : 1,
+    	todayHighlight : 1,
+	startView : 2,
+  		  minView : 2,
+  	  maxView : 4,
+   	 forceParse : 0,
+	});
+</script>
+<script type="text/javascript">
+function selectMaterial(){
+
+			$('#selectMaterial').modal('show');
+		
+}
+</script>
+<script>
+    var addDetail = function () {
+        var _len = $("#tab-detail tr").length-2;
+
+        //禁用输入
+        $("#detail-"+_len+"-materialName").attr("disabled","disabled");
+        $("#detail-"+_len+"-specification").attr("disabled","disabled");
+        $("#detail-"+_len+"-vol").attr("disabled","disabled");
+        $("#detail-"+_len+"-vendor").attr("disabled","disabled");
+        $("#detail-"+_len+"-usage").attr("disabled","disabled");
+
+        $('#add i').removeClass().addClass("fa fa-minus");
+        $('#add').attr('onclick',"deltr("+_len+")");
+        $('#add').attr('id','delete-'+_len);
+
+        var nlen = _len + 1;
+        $("#tab-detail").append("<tr id="+nlen+" align='center'>"
+                +"<td><input type='text' name='supplementMaterial["+ nlen +"].materialName' id='detail-"+ nlen +"-materialName' ></td>"
+                +"<td><input type='text' name='supplementMaterial["+ nlen +"].specification' id='detail-"+ nlen +"-specification' value='0'></td>"
+                +"<td><input type='text' name='supplementMaterial["+ nlen +"].vol' id='detail-"+ nlen +"-vol' value='0'></td>"
+                +"<td><input type='text' name='supplementMaterial["+ nlen +"].vendor' id='detail-"+ nlen +"-vendor' value='0'></td>"
+                +"<td><input type='text' name='supplementMaterial["+ nlen +"].usage' id='detail-"+ nlen +"-usage' value='0'></td>"
+                +"<td><button class='btn-success' id='add' onclick='addDetail()'><i class='fa fa-plus'></i></button></td>"
+                +"</tr>");
+
+    }
+    //删除<tr/>
+    var deltr = function (index) {
+        var _len = $("#tab-detail tr").length - 2;
+
+        $("tr[id='" + index + "']").remove();//删除当前行
+        var nextMaterialName,nextSpecification,nextVol,nextVendor,nextUsage;
+        for (var i = index + 1, j = _len ; i < j; i++) {
+            nextMaterialName = $("#detail-" + i +"-materialName").val();
+            nextSpecification = $("#detail-" + i +"-specification").val();
+            nextVol = $("#detail-" + i +"-vol").val();
+            nextVendor = $("#detail-" + i +"-vendor").val();
+            nextUsage = $("#detail-" + i +"-usage").val();
+            
+            $("tr[id=\'" + i + "\']")
+                    .replaceWith("<tr id=" + (i - 1) + " align='center'>"
+                            + "<td><input type='text' name='supplementMaterial["+ (i - 1) +"].materialName' value='" + nextMaterialName + "' id='detail-"+ (i - 1) +"-materialName' disabled></td>"
+                            + "<td><input type='text' name='supplementMaterial["+ (i - 1) +"].specification' id='detail-"+ (i - 1) +"-specification' value='" + nextSpecification + "' disabled></td>"
+                            + "<td><input type='text' name='supplementMaterial["+ (i - 1) +"].vol' id='detail-"+ (i - 1) +"-vol' value='" + nextVol + "' disabled></td>"
+                            + "<td><input type='text' name='supplementMaterial["+ (i - 1) +"].vendor' id='detail-"+ (i - 1) +"-vendor' value='" + nextVendor + "' disabled></td>"
+                            + "<td><input type='text' name='supplementMaterial["+ (i - 1) +"].usage' id='detail-"+ (i - 1) +"-usage' value='" + nextUsage + "' disabled></td>"
+                            + "<td><button class='btn-success' onclick=\'deltr(" + (i - 1) + ")\' id='delete-'"+(i-1)+"><i class='fa fa-minus'></i></button></td>"
+                            + "</tr>");
+        }
+
+        $("tr[id=\'" + (_len) + "\']")
+                .replaceWith("<tr id=" + (_len - 1) + " align='center'>"
+                        + "<td><input type='text' name='supplementMaterial["+ (_len - 1) +"].materialName'  id='detail-"+ (_len - 1) +"-materialName'></td>"
+                        + "<td><input type='text' name='supplementMaterial["+ (_len - 1) +"].specification' id='detail-"+ (_len - 1) +"-specification' value='0'></td>"
+                        + "<td><input type='text' name='supplementMaterial["+ (_len - 1) +"].vol' id='detail-"+ (_len - 1) +"-vol' value='0'></td>"
+                        + "<td><input type='text' name='supplementMaterial["+ (_len - 1) +"].vendor' id='detail-"+ (_len - 1) +"-vendor' value='0'></td>"
+                        + "<td><input type='text' name='supplementMaterial["+ (_len - 1) +"].usage' id='detail-"+ (_len - 1) +"-usage' value='0'></td>"
+                        + "<td><button class='btn-success' onclick='addDetail()' id='add'><i class='fa fa-plus'></i></button></td>"
+                        + "</tr>");
+
+    }
+</script>
+
+</body>
+</html>

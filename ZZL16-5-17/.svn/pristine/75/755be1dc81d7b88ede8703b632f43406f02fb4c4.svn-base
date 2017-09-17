@@ -1,0 +1,29 @@
+package productManage.action.conditionSheets;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.PageAction;
+import productManage.service.conditionSheets.TechniqueConditionService;
+
+
+public class TechniqueConditionAction extends PageAction{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private Map<String, String> seasonMap = new LinkedHashMap<String, String>();
+	
+	public String techniqueCondition(){
+		seasonMap.put("s1", "12");
+		seasonMap.put("s2", "55");
+		seasonMap.put("s3", "26");
+		seasonMap.put("s4", "88");
+		return SUCCESS;
+	}
+	
+	
+	
+
+}

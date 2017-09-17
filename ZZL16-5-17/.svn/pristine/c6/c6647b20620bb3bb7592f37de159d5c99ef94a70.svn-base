@@ -1,0 +1,59 @@
+package productManage.action.tailor;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import productManage.action.PageAction;
+import productManage.service.tailor.TailorService;
+import productManage.vo.PageBean;
+import productManage.vo.tailor.TailorConstants;
+@Controller
+public class TailorAction extends PageAction {
+	@Autowired
+	private TailorService tailorService;
+	private String productionCode;
+	private String designCode;
+
+	@Override
+	public String queryPage() throws Exception {
+		this.productionCode=null;
+		this.designCode=null;
+		return queryPageWithParams();
+	}
+	
+	public String queryPageWithParams() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(TailorConstants.SEARCH_TAILOR_PARAMS[0], this.productionCode);
+		params.put(TailorConstants.SEARCH_TAILOR_PARAMS[1], this.designCode);
+		try {
+			this.pageBean = tailorService.queryTailorsCondition(this.rowsPerPage, this.page, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.pageBean=new PageBean();
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+
+	public String getProductionCode() {
+		return productionCode;
+	}
+
+	public void setProductionCode(String productionCode) {
+		this.productionCode = productionCode;
+		this.page=1;//若查询条件发生变化，从第一页开始
+	}
+
+	public String getDesignCode() {
+		return designCode;
+	}
+
+	public void setDesignCode(String designCode) {
+		this.designCode = designCode;
+		this.page=1;//若查询条件发生变化，从第一页开始
+	}
+	
+}

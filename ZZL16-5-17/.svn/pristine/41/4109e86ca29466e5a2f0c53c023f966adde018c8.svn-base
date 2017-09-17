@@ -1,0 +1,176 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+
+    <%@ include file="../../header.jsp"%>
+    <link href="../css/orders.css" rel="stylesheet" type="text/css" />
+    <title>智造链-排单管理</title>
+
+    <style type="text/css">
+       a,label{color: #737373;}
+       a:hover{color: #737373;}
+       #inquiryProgress{height:26px;padding:0px 12px;} 
+       #isInStore{height:26px;padding:0px 12px;}  
+       #tailModel{height:26px;padding:0px 12px;}    
+       .input-group{position: relative;float: left;width: 20%;}
+       .input-group-1{position: relative;float: left;width: 30%;}
+       .search-title{position: relative;float:left;margin-top:2px;}
+       .form-control{float: left;width: 90%;}
+       .table-responsive{margin-top: 50px;}
+       .table{border-top: 3px solid #7D9EC0;}
+       .bc{background-color:#00FF00}
+       .input-panel{position:relative;float:left;border:1px solid #ccc;border-radius: 3px;padding: 2px 10px;width:60%;}
+    </style>
+</head>
+<body class="skin-blue">
+ <!-- header logo: style can be found in header.less -->
+    <header class="header">
+        <a href="index.jsp" class="logo">
+        <!-- Add the class icon to your logo image or logo icon to add the margining -->
+            智&nbsp造&nbsp链
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+        </nav>
+    </header>
+
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <!-- 左边导航栏  -->
+        <jsp:include page="../../navigation.jsp"></jsp:include>
+        
+        <!-- Right side column. Contains the navbar and content of the page -->
+   
+		<aside class="right-side">
+	       <!-- Content Header (Page header) -->
+	       <section class="content-header">
+	           <h1>
+	               	大货裁剪排单
+	           </h1>
+	       </section>
+	       <!-- Main Content -->
+	       <section class="content">
+	       
+	       <!-- 裁剪查询 -->
+	        <form  role="form" method="post" action="<%=request.getContextPath() %>/listManage/InquireTaiorPhase"">
+	       <div class="input-group" id="design_id">
+	             <a class="search-title">款号：</a>
+	            <input type="text" id="designCode" name="designCode" class="input-panel" placeholder="" style="padding: 2px 10px;" >                 
+	       </div>
+	       
+	      <div class="input-group" id="outsource_id">
+	            <a class="search-title">订单编号：</a>
+	            <input type="text" id="outsourceCode" name="outsourceCode" class="input-panel" placeholder="" style="padding: 2px 10px;" >                 
+	       </div>
+	       
+	           <a class="search-title">排版：</a>  
+               <div class="input-group-1" style="width:10%;" >   
+                                   
+	               <select id="tailModel" name="tailModel" class="form-control">
+	                <option>请选择</option>
+	                <option>已排版</option>
+	                <option>未排版</option>
+	               </select>
+	           </div>
+	           
+	         <a class="search-title">      面料进度：</a>
+               <div class="input-group-1" style="width:10%;" > 
+                                         
+	               <select id="isInStore" name="isInStore" class="form-control">
+	                <option>请选择</option>
+	                <option>已到货</option>
+	                <option>部分到货</option>
+	                <option>未到货</option>
+	               </select>
+	        </div><br/><br/>
+	        
+	        <div class="input-group-1">
+                    <a class="search-title">截止外发时间：</a>
+                    <input type="text" id="outSource_date" name="outSource_date" class="input-panel" placeholder="" >                
+              </div> 
+              
+              <a class="search-title">状态：</a>     
+               <div class="input-group" style="width:10%;" >
+	                        
+	               <select id="inquiryProgress" name="inquiryProgress" class="form-control">
+	                <option>请选择</option>
+	                <option>第一时间</option>
+	                <option>普通</option>
+	               </select>
+	           </div>
+	           <a class="search-title">&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp裁剪：</a>     
+               <div class="input-group" style="width:10%;" >
+	                        
+	               <select id="tailor" name="tailor" class="form-control">
+	                <option>请选择</option>
+	                <option>已裁剪</option>
+	                <option>未裁剪</option>
+	               </select>
+	           </div>       &nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp
+	           
+	       <button type="submit" id="search-outsource" class="btn btn-primary" style="padding:0px 15px;" ">查询</button>
+	       </form>
+	       
+	       
+	       <!-- 裁剪单列表 -->
+	       <div class="table-responsive">
+	           <a style="color:#AAAAAA;">共<s:property value="PageBean.allRow"/>条裁剪排单</a>
+	           <table class="table table-striped">
+	           <tr>
+					               <th>图片</th>
+					               <th>外发订单编号</th>
+					               <th>款式信息</th>
+					               <th>来源</th>
+					               <th>外发时间</th>
+					               <th>进度</th>
+					               <th>面料进度</th>
+					               <th>操作</th>
+				</tr>
+				<s:iterator value="PageBean.list" var="TailorManageVO">
+				<tr>
+                                   <td><img src="../images/1.png" class="commdity-graph"></td>
+                                   <td><s:property value="#TailorManageVO.outsourceCode" />
+					                    <br/><font color="red"><s:property value="#TailorManageVO.designTechProcedure"/></font>
+					                    <br/>
+					                    <label class="bc"><font color="red">开始时间：<s:property value="#TailorManageVO.tailorStartingTime"/></font></label></td>
+					               <td><font color="blue">款号：</font><s:property value="#TailorManageVO.designCode" />
+					               <br/><font color="blue">款名：</font><s:property value="#TailorManageVO.designName" /></td>
+					               <td><s:property value="#TailorManageVO.source"/></td>
+					               <td><font color="blue">状态：</font><font color="red"><s:property value="#TailorManageVO.orderPriority"/></font>
+					               <br/><font color="blue">预约外发：</font><s:property value="#TailorManageVO.referenceOutDate"/> </td>
+					               <td><font color="blue">排版：</font><font color="green"><s:property value="#TailorManageVO.tailorModelName" /></font>
+					               <br/><font color="blue">裁剪：</font><font color="green"><s:property value="#TailorManageVO.tailorTailorName" /></font></td>
+					               <td><font color="green"><s:property value="#TailorManageVO.isInWarehouse"/></font></td>
+					                <td><a href="<%=request.getContextPath() %>/listManage/showOutSourceDetail?outSourceID=<s:property value='#TailorManageVO.outsourceID'/>" id="showDetail" style="color:#7EC0EE;">查看详情</a></td>
+                </tr>
+				</s:iterator>
+	           </table>
+	       </div>
+	        <%@ include file="../../page.jsp"%>
+	       </section>
+	     </aside>
+	 </div>
+</body>
+</html>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+	 $('#outSource_date').datetimepicker({
+		 	language:  'zh-CN',
+	        format : 'yyyy-mm-dd',
+	        weekStart : 1,
+	        todayBtn : 1,
+	        autoclose : 1,
+	        todayHighlight : 1,
+	        startView : 2,
+	        minView : 2,
+	        maxView : 4,
+	        forceParse : 0,
+	    });
+	</script>

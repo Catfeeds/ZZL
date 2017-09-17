@@ -1,0 +1,150 @@
+package productManage.service.system.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.wy.AuthorityDao;
+import productManage.dao.wy.RoleAuthorityDao;
+import productManage.model.wy.Authority;
+import productManage.model.wy.RoleAuthority;
+import productManage.service.system.AuthorityService;
+@Service
+public class AuthorityServiceImp implements AuthorityService {
+	@Autowired
+	private AuthorityDao authorityDao;
+	@Autowired
+	private RoleAuthorityDao roleAuthorityDao;
+	
+	@Override
+	public List<Authority> findAll() {
+		// TODO Auto-generated method stub
+		return authorityDao.findAll();
+	}
+
+	@Override
+	public void updateAuthority(Authority authority) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Authority getAuthorityById(String authorityID) {
+		// TODO Auto-generated method stub
+		return authorityDao.findById(authorityID);
+	}
+
+	@Override
+	public List<String> getAllHighAuthoName() {
+		// TODO Auto-generated method stub
+		List<Authority> authoList = authorityDao.findAll();
+		return high(authoList);
+	}
+
+	@Override
+	public List<String> getMiddleByHigh(String highAuthoName) {
+		// TODO Auto-generated method stub
+		List<Authority> authoList = authorityDao.findAll();
+		return middle(authoList, highAuthoName);
+	}
+
+	@Override
+	public List<Authority> getLowByMiddleHigh(String middleAuthoName,
+			String highAuthoName) {
+		// TODO Auto-generated method stub
+		List<Authority> authoList = authorityDao.findAll();
+		return low(authoList, middleAuthoName, highAuthoName);
+	}
+	
+	@Override
+	public List<String> getRoleHighAuthoName(int roleID) {
+		// TODO Auto-generated method stub
+		List<Authority> authoList = roleAuthorityDao.findRoleAuthority(roleID);
+		return high(authoList);
+	}
+
+	@Override
+	public List<String> getRoleMiddleByHigh(int roleID, String highAuthoName) {
+		// TODO Auto-generated method stub
+		List<Authority> authoList = roleAuthorityDao.findRoleAuthority(roleID);
+		return middle(authoList, highAuthoName);
+	}
+
+	@Override
+	public List<Authority> getRoleLowByMiddleHigh(int roleID,
+			String middleAuthoName, String highAuthoName) {
+		// TODO Auto-generated method stub
+		List<Authority> authoList = roleAuthorityDao.findRoleAuthority(roleID);
+		return low(authoList, middleAuthoName, highAuthoName);
+	}
+
+	private List<String> high(List<Authority> authoList){
+		List<String> highAuthoNameList = new ArrayList<String>();
+		
+		for(int i = 0;i < authoList.size();i++){
+			String highAuthoNameItem = authoList.get(i).getHighAuthName();
+			if(!highAuthoNameList.contains(highAuthoNameItem)){
+				highAuthoNameList.add(highAuthoNameItem);
+			}
+		}
+		return highAuthoNameList;
+	}
+	
+	private List<String> middle(List<Authority> authoList,String highAuthoName){
+		List<String> middleNameList = new ArrayList<String>();
+		 
+		for(int i = 0;i < authoList.size();i++){
+			if(authoList.get(i).getHighAuthName().equals(highAuthoName)){
+				String middleAuthoName = authoList.get(i).getMiddleAuthName();
+				if(!middleNameList.contains(middleAuthoName)){
+					middleNameList.add(middleAuthoName);
+				}
+			}
+		}
+		return middleNameList;
+	}
+	
+	private List<Authority> low(List<Authority> authoList,String middleAuthoName,String highAuthoName) {
+		// TODO Auto-generated method stub
+		List<Authority> lowAuthoNameList = new ArrayList<Authority>();
+		
+		for(int i = 0;i < authoList.size();i++){
+			Authority itemAutho = authoList.get(i);
+			String itemHighAuthoName = itemAutho.getHighAuthName();
+			String itemMiddleAuthoName = itemAutho.getMiddleAuthName();
+			String itemLowAuthoName = itemAutho.getLowAuthName();
+			if(itemHighAuthoName.equals(highAuthoName) && itemMiddleAuthoName.equals(middleAuthoName) && !itemLowAuthoName.isEmpty()){
+				lowAuthoNameList.add(itemAutho);
+			}
+		}
+		return lowAuthoNameList;
+	}
+
+	@Override
+	public void saveRoleAuthority(int roleID,String[]ras) {
+		// TODO Auto-generated method stub
+		List<RoleAuthority> ra = roleAuthorityDao.findAll();
+		for (int j = 0; j < ra.size(); j++) {
+			if (ra.get(j).getRoleID()==roleID) {
+				roleAuthorityDao.delete(ra.get(j));
+			}
+		}
+		for (int i = 0; i < ras.length; i++) {
+			String[]name = ras[i].split("_");
+			String highAuthoName = name[0];
+			String middleAuthoName = (name.length>1)?name[1]:"";
+			String lowAuthoName = (name.length>2)?name[2]:"";
+			int authorityID = authorityDao.getIDByAuthority(highAuthoName, middleAuthoName, lowAuthoName);
+			if (authorityID>0) {
+				RoleAuthority roleAuthority = new RoleAuthority();
+				roleAuthority.setRoleID(roleID);
+				roleAuthority.setAuthorityID(authorityID);
+				roleAuthorityDao.saveRoleAuthority(roleAuthority);
+			}
+		}
+		
+	}
+
+}

@@ -1,0 +1,185 @@
+package productManage.action.material;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.BaseAction;
+import productManage.action.PageAction;
+import productManage.model.lhj.Material;
+import productManage.service.material.MaterialService;
+import productManage.util.DateFormat;
+import productManage.vo.PageBean;
+import productManage.vo.material.ApplyConstants;
+import productManage.vo.material.MaterialConstants;
+import productManage.vo.material.MaterialVO;
+import productManage.vo.process.ProcessConstants;
+
+public class MaterialAction extends PageAction{
+
+	private static final long serialVersionUID = 1L;
+	@Autowired
+	private MaterialService materialservice;
+	
+	private String materialName;
+
+	public String showAddMaterial(){
+		return SUCCESS;
+	}
+	
+	public String addMaterial() throws ServletException, IOException{
+		Material material = new Material();
+		
+		//信息设置
+	    String materialCode = "A001";
+	    String materialName = "A001";
+	    String materialType = "A001";
+	    String colorCode = "A001";
+	    String colorDescription = "A001";
+	    String materialIngredient = "A001";
+	    float unitPrice = 100;
+	    String unit = "A001";
+	    float width = 10;
+	    float outputVol = 10;
+		Date modificationDate = new Date();
+	    
+	    materialCode = request.getParameter("materialCode");
+	    materialName = request.getParameter("materialName");
+	    materialType = request.getParameter("materialType");
+	    colorCode = request.getParameter("colorCode");
+	    colorDescription = request.getParameter("colorDescription");
+	    materialIngredient = request.getParameter("materialIngredient");
+	    unitPrice = Float.parseFloat(request.getParameter("unitPrice"));
+	    unit = request.getParameter("unit");
+	    width = Float.parseFloat(request.getParameter("width"));
+	    outputVol = Float.parseFloat(request.getParameter("outputVol"));
+	    modificationDate = new Date();
+	    
+	    material.setMaterialCode(materialCode);
+	    material.setMaterialName(materialName);
+	    material.setMaterialType(materialType);
+	    material.setColorCode(colorCode);
+	    material.setColorDescription(colorDescription);
+	    material.setMaterialIngredient(materialIngredient);
+	    material.setUnitPrice(unitPrice);
+	    material.setUnit(unit);
+	    material.setWidth(width);
+	    material.setOutputVol(outputVol);
+	    material.setModificationDate(new java.sql.Date(modificationDate.getTime()));
+	    
+		materialservice.addMaterial(material);
+		return SUCCESS;
+	}
+	
+	public String showMaterialList(){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(MaterialConstants.SEARCH_MATERIAL_PARAMS[0], this.materialName);
+		try {
+			this.pageBean = materialservice.queryMaterial(this.rowsPerPage, this.page, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.pageBean=new PageBean();
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+	
+	public String getMaterialName() {
+		return materialName;
+	}
+
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private Material materialvo;
+	
+	public Material getMaterialvo() {
+		return materialvo;
+	}
+
+	public void setMaterialvo(Material materialvo) {
+		this.materialvo = materialvo;
+	}
+
+	public String getMaterial(){
+		this.materialvo = materialservice.getMaterialByCode(request.getParameter("materialCode"));
+		return SUCCESS;
+	}
+	
+	public String updateMaterial() throws ServletException, IOException{
+		Material material = new Material();
+		String materialCode = request.getParameter("materialCode");
+	    String materialName = request.getParameter("materialName");
+	    String materialType = request.getParameter("materialType");
+	    String colorCode = request.getParameter("colorCode");
+	    String colorDescription = request.getParameter("colorDescription");
+	    String materialIngredient = request.getParameter("materialIngredient");
+	    float unitPrice = Float.parseFloat(request.getParameter("unitPrice"));
+	    String unit = request.getParameter("unit");
+	    float width = Float.parseFloat(request.getParameter("width"));
+	    float outputVol = Float.parseFloat(request.getParameter("outputVol"));
+	    Date modificationDate = new Date();
+	    
+	    material.setMaterialCode(materialCode);
+	    material.setMaterialName(materialName);
+	    material.setMaterialType(materialType);
+	    material.setColorCode(colorCode);
+	    material.setColorDescription(colorDescription);
+	    material.setMaterialIngredient(materialIngredient);
+	    material.setUnitPrice(unitPrice);
+	    material.setUnit(unit);
+	    material.setWidth(width);
+	    material.setOutputVol(outputVol);
+	    material.setModificationDate(new java.sql.Date(modificationDate.getTime()));
+	    
+	    materialservice.updateMaterial(material);
+		return SUCCESS;
+	}
+	
+	
+	//============================================
+	private String materialApplyCode="";
+
+	private String materialApplyDate="";
+	
+
+	public String getMaterialApplyCode() {
+		return materialApplyCode;
+	}
+
+	public String getMaterialApplyDate() {
+		return materialApplyDate;
+	}
+
+	public void setMaterialApplyCode(String materialApplyCode) {
+		this.materialApplyCode = materialApplyCode;
+	}
+
+	public void setMaterialApplyDate(String materialApplyDate) {
+		this.materialApplyDate = materialApplyDate;
+	}
+	
+	public String showApplyList(){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(ApplyConstants.SEARCH_APPLY_PARAMS[0], this.materialApplyCode);
+		params.put(ApplyConstants.SEARCH_APPLY_PARAMS[1], this.materialApplyDate);
+		try {
+			this.pageBean = materialservice.queryApply(this.rowsPerPage, this.page, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.pageBean=new PageBean();
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+}

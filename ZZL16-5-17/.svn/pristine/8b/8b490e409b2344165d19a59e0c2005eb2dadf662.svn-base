@@ -1,0 +1,33 @@
+package productManage.dao.yrd.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.dao.BaseDao;
+import productManage.dao.yrd.TechniqueConditionDao;
+import productManage.model.yrd.TechniqueCondition;
+
+/**
+ * @author yrd
+ * @date 创建时间2016-02-28
+ */
+
+public class TechniqueConditionDaoImpl implements TechniqueConditionDao {
+	
+	@Autowired
+	private BaseDao baseDao;
+	
+	@Override
+	public List<TechniqueCondition> findTechniqueCondtion(Date date){
+		Session session = baseDao.getNewSession();	
+		String hql = "from productManage.Model.TechniqueCondition as t where t.TechniqueConditionDate='"+date+"'";
+		Query query = session.createQuery(hql);
+		List<TechniqueCondition> list = query.list();
+		return list;
+	}
+
+}

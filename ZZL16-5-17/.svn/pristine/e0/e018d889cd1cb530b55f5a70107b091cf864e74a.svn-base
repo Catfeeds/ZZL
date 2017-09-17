@@ -1,0 +1,33 @@
+package productManage.dao.yrd.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.dao.BaseDao;
+import productManage.dao.yrd.PhaseConditionDao;
+import productManage.model.yrd.PhaseCondition;
+
+/**
+ * @author yrd
+ * @date 创建时间2016-02-28
+ */
+
+public class PhaseConditionDaoImpl implements PhaseConditionDao {
+	
+	@Autowired
+	private BaseDao baseDao;
+	
+	@Override
+	public List<PhaseCondition> findPhaseCondtion(String phaseName,Date date){
+		Session session = baseDao.getNewSession();	
+		String hql = "from productManage.Model.PhaseCondition as p where p.phaseConditionDate='"+date+"'"
+				+ "and p.phaseName='"+phaseName+"'";
+		Query query = session.createQuery(hql);
+		List<PhaseCondition> list = query.list();
+		return list;
+	}
+}

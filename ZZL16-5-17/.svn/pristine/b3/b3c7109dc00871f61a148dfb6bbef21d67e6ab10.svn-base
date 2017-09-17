@@ -1,0 +1,79 @@
+package productManage.action.sample;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.PageAction;
+import productManage.model.tms.Design;
+import productManage.model.whq.Sample;
+import productManage.model.whq.SampleStorageDetail;
+import productManage.service.sample.SampleManageService;
+
+/**
+ * @author WHQ
+ * @date 创建时间2016-3-8
+ */
+public class SampleAction extends PageAction{
+	@Autowired
+	private SampleManageService samplemanageservice;
+	
+	private String designID;
+	private String sampleTime;
+	private String samplePlace;
+	private String sampleOPComment;
+	public String addSample(){
+		System.out.println("enter addSample action");
+		return "success";
+	}
+	
+	public String addInSample(){
+		System.out.println("enter addInSample action");
+		System.out.println(designID);
+		
+		
+		samplemanageservice.SampleInput(designID,sampleTime,samplePlace,sampleOPComment);
+		return "success";
+	}
+	
+	
+	public SampleManageService getSamplemanageservice() {
+		return samplemanageservice;
+	}
+
+	public void setSamplemanageservice(SampleManageService samplemanageservice) {
+		this.samplemanageservice = samplemanageservice;
+	}
+
+	public String getDesignID() {
+		return designID;
+	}
+
+	public void setDesignID(String designID) {
+		this.designID = designID;
+	}
+
+	public String getSampleTime() {
+		return sampleTime;
+	}
+
+	public void setSampleTime(String sampleTime) {
+		this.sampleTime = sampleTime;
+	}
+
+	public String getSamplePlace() {
+		return samplePlace;
+	}
+
+	public void setSamplePlace(String samplePlace) {
+		this.samplePlace = samplePlace;
+	}
+
+	public String getSampleOPComment() {
+		return sampleOPComment;
+	}
+
+	public void setSampleOPComment(String sampleOPComment) {
+		this.sampleOPComment = sampleOPComment;
+	}
+	
+	
+}

@@ -1,0 +1,175 @@
+package productManage.service.purchase.impl;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.tyc.PurchaseDao;
+import productManage.dao.wcy.QcDAO;
+import productManage.model.User;
+import productManage.model.cs.OutSource;
+import productManage.model.cs.OutSourceDetail;
+import productManage.model.lhj.Bom;
+import productManage.model.lhj.Material;
+import productManage.model.lhj.Vendor;
+import productManage.model.tms.Design;
+import productManage.model.tyc.Purchase;
+import productManage.model.wjx.Store;
+import productManage.model.yk.OrderDetail;
+import productManage.model.yk.Orders;
+import productManage.model.yrd.Customer;
+import productManage.model.zky.Tailor;
+import productManage.service.purchase.PurchaseService;
+import productManage.vo.production.OrderDetailVO;
+import productManage.vo.production.ProductionConstants;
+import productManage.vo.purchase.bomVO;
+import productManage.vo.purchase.purchaseVO;
+import productManage.vo.purchase.vendorVO;
+
+/**  
+* 类说明   
+*  
+* @author tyc  
+* @date 2016年3月8日 新建 
+*/
+@Service
+public class PurchaseServiceImpl implements PurchaseService {
+	@Autowired
+	private PurchaseDao purchaseDao;
+	public PurchaseDao getPurchaseDao() {
+		return purchaseDao;
+	}
+
+	public void setPurchaseDao(PurchaseDao purchaseDao) {
+		this.purchaseDao = purchaseDao;
+	}
+
+	@Override
+	public List<Purchase> allPurchase() {
+		// TODO Auto-generated method stub
+		return purchaseDao.allPurchase();
+	}
+
+	@Override
+	public List<Purchase> selectPurchase(Date Eta, Date scheduledPurchaseDate, int vendorId, String purchaseState,
+			int styleId, int oldOrNew) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updatePurchaseState(int purchaseID, String state) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Purchase usingMaterialAudit(int purchaseId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Purchase stockAudit(int purchaseId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public purchaseVO purchaseDetail(int purchaseID) {
+		// TODO Auto-generated method stub
+		String empty = "暂无";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<bomVO> materials = new ArrayList<bomVO>();
+		Purchase purchase = purchaseDao.purchaseDetail(purchaseID);
+		int totalNum = 0;
+		//if(purchase==null){
+			//return null;
+		//}
+		//else{
+			
+		
+			Orders order = null;
+			if (purchase.getProduction().getOrders().iterator().hasNext()) {
+				order = purchase.getProduction().getOrders().iterator().next();
+			}
+	
+			Design design = null;
+			Customer customer = null;
+			String designNewOld = empty;
+			List<OrderDetailVO> orderDetails = new ArrayList<OrderDetailVO>();
+			if(order!=null){
+				design = order.getDesign();
+				customer = order.getCustomer();
+				if (order.getOrderDesignIsNew() > 0) {
+					designNewOld = ProductionConstants.DESIGN_NEW_OLD[0];
+				} else {
+					designNewOld = ProductionConstants.DESIGN_NEW_OLD[1];
+				}
+				Iterator<OrderDetail> detailItr = order.getOrderDetails().iterator();
+				while (detailItr.hasNext()) {
+					OrderDetail temp = detailItr.next();
+					totalNum += temp.getTotalNum();
+					orderDetails.add(new OrderDetailVO(temp.getOrderColor(), temp.getOrderXS(), temp.getOrderS(),
+							temp.getOrderM(), temp.getOrderL(), temp.getOrderXL(), temp.getOrderXXL(),
+							temp.getTotalNum(), temp.getOrderXS(),
+							temp.getOrderS(),
+							temp.getOrderM(),
+							temp.getOrderL(),
+							temp.getOrderXL(),
+							temp.getOrderXXL(),
+							temp.getTotalNum()));
+				}
+				
+				Iterator<Bom> materialItr = order.getDesign().getBoms().iterator();
+				while(materialItr.hasNext()){
+					Bom bom = materialItr.next();
+					Iterator<Store> storeItr = bom.getMaterial().getStores().iterator();
+					float remainVol = 0,frozenVol = 0;
+					while(storeItr.hasNext()){
+						remainVol += storeItr.next().getRemainVol();
+						frozenVol += storeItr.next().getFrozenVol();
+					}
+					materials.add(new bomVO(bom.getMaterial().getMaterialCode(), bom.getMaterial().getMaterialName(), 
+							bom.getMaterial().getMaterialType(), bom.getMaterial().getColorCode(),
+							bom.getMaterial().getColorDescription(), bom.getMaterial().getMaterialIngredient(), 
+							bom.getMaterial().getUnitPrice(), bom.getMaterial().getUnit(), bom.getMaterial().getWidth(),
+							bom.getMaterial().getOutputVol(), bom.getVolPerDesign(), bom.getMaterialPosition(), remainVol, 
+							frozenVol,totalNum*bom.getVolPerDesign()));
+				}
+			}
+			User maker = null;
+			maker = purchase.getUser();
+			String vendors = empty;
+			Iterator<Vendor> vendorItr = purchase.getVendors().iterator();
+			while(vendorItr.hasNext()){
+				Vendor vendor = vendorItr.next();
+				if(vendors.equals("暂无")){
+					vendors = (vendor.getVendorName()+": "+vendor.getVendorPhoneNum());
+				}
+				else{
+					vendors += (","+vendor.getVendorName()+": "+vendor.getVendorPhoneNum());
+				}
+				
+				
+			}
+			
+			
+			
+			purchaseVO purchaseVo = new purchaseVO(designNewOld, purchase.getPurchaseCode(), 
+					design.getDesignCode(), customer.getCustomerBrandName(), 
+					sdf.format(purchase.getPurDocumentedDate()), design.getDesignName(), 
+					vendors, maker.getUserName(), purchase.getPurchaseComment(), 
+					design.getDesignPicURL(), materials, orderDetails,
+					sdf.format(purchase.getScheduledPurchaseDate()));
+			return purchaseVo;
+		//}
+	}
+
+}

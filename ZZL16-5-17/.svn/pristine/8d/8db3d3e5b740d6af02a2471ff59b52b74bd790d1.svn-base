@@ -1,0 +1,51 @@
+package productManage.action.productionSchedule;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import productManage.action.PageAction;
+import productManage.service.ListManage.TailorPhaseService;
+
+
+@Controller
+public class TailorManageAction  extends PageAction{
+	@Autowired
+	private TailorPhaseService tailorphaseservice;
+	
+	public String showAllSourcesInTailor(){
+		this.pageBean = tailorphaseservice.getAllOutSourceInTailor(this.page, this.rowsPerPage);
+		return "success";
+	}
+	
+	public String inquireSourcesInTailor(){
+		String designCode = request.getParameter("designCode");
+		String outsourceCode = request.getParameter("outsourceCode");
+		String tailModel = request.getParameter("tailModel");
+		String isInStore = request.getParameter("isInStore");
+		String outSource_date = request.getParameter("outSource_date");
+		String inquiryProgress = request.getParameter("inquiryProgress");
+		String tailor = request.getParameter("tailor");
+		
+		//生成sql语句
+		StringBuffer hql = new StringBuffer();
+		hql.append("select o from OutSource o,Production p where o.production.productionID = p.productionID and p.productionState ='工艺'");
+		
+		if(null!=designCode && !"".equals(designCode)){
+			hql.append(" and o.design.designCode like '%"+designCode+"%'");
+		}
+		
+		if(null!=outSource_date && !"".equals(outSource_date)){
+			hql.append(" and o.referenceOutDate <='"+outSource_date+"'");
+		}
+		
+		
+		if(null != outsourceCode && !"".equals(outsourceCode)){
+			hql.append(" and o.outsourceCode like '%"+outsourceCode+"%'");
+		}
+		
+		
+		this.pageBean = tailorphaseservice.inquireOutSourceInTailor(hql.toString(), this.page, this.rowsPerPage);
+		return "success";
+	}
+	
+}

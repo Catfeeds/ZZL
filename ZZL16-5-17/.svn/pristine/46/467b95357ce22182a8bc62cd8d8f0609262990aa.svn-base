@@ -1,0 +1,26 @@
+package productManage.service.technique.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.tms.TechniqueInventoryDAO;
+import productManage.model.tms.TechniqueInventory;
+import productManage.service.technique.TechniqueInventoryService;
+@Service
+public class TechniqueInventoryServiceImpl implements TechniqueInventoryService {
+	@Autowired
+	private TechniqueInventoryDAO techInventoryDao;
+	public TechniqueInventoryDAO getTechInventoryDao() {
+		return techInventoryDao;
+	}
+	public void setTechInventoryDao(TechniqueInventoryDAO techInventoryDao) {
+		this.techInventoryDao = techInventoryDao;
+	}
+	@Override
+	public void save(TechniqueInventory techniqueInventory) {
+		// TODO Auto-generated method stub
+		techInventoryDao.save(techniqueInventory);
+	}
+
+
+}

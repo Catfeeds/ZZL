@@ -1,0 +1,111 @@
+package productManage.action.material;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.PageAction;
+import productManage.model.lhj.Bom;
+import productManage.model.tms.Design;
+import productManage.model.wjx.Store;
+import productManage.service.material.BomService;
+import productManage.service.technique.DesignService;
+import productManage.vo.PageBean;
+import productManage.vo.purchase.bomVO;
+import productManage.vo.technique.TechniqueConstants;
+
+public class BomAction extends PageAction{
+
+	private static final long serialVersionUID = 1L;
+	@Autowired
+	private BomService bomservice;
+	
+	private String designCode="";
+
+	private String putawayDate="";
+	
+	public String showDesignList(){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(TechniqueConstants.SEARCH_TECHNIQUE_PARAMS[0],designCode);
+		params.put(TechniqueConstants.SEARCH_TECHNIQUE_PARAMS[1], putawayDate);
+		try {
+			this.pageBean = bomservice.queryDesign(this.rowsPerPage, this.page, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.pageBean=new PageBean();
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+	
+	public String getDesignCode() {
+		return designCode;
+	}
+
+	public String getPutawayDate() {
+		return putawayDate;
+	}
+
+	public void setDesignCode(String designCode) {
+		this.designCode = designCode;
+	}
+
+	public void setPutawayDate(String putawayDate) {
+		this.putawayDate = putawayDate;
+	}
+	
+	private Design design;
+	private List<bomVO> materials = new ArrayList<bomVO>();
+	
+	public Design getDesign() {
+		return design;
+	}
+
+	public void setDesign(Design design) {
+		this.design = design;
+	}
+
+	public String getBom(){
+		this.design = bomservice.getDesignByCode(request.getParameter("designCode"));
+		
+		float tem = (float) 1111.0;
+		Iterator<Bom> materialItr = design.getBoms().iterator();
+		while(materialItr.hasNext()){
+			Bom bom = materialItr.next();
+			Iterator<Store> storeItr = bom.getMaterial().getStores().iterator();
+			float remainVol = 0,frozenVol = 0;
+			while(storeItr.hasNext()){
+				Store storeTemp = storeItr.next();
+				remainVol += storeTemp.getRemainVol();
+				frozenVol += storeTemp.getFrozenVol();
+			}
+			materials.add(new bomVO(bom.getMaterial().getMaterialCode(), bom.getMaterial().getMaterialName(), 
+					bom.getMaterial().getMaterialType(), bom.getMaterial().getColorCode(),
+					bom.getMaterial().getColorDescription(), bom.getMaterial().getMaterialIngredient(), 
+					bom.getMaterial().getUnitPrice(), bom.getMaterial().getUnit(), bom.getMaterial().getWidth(),
+					bom.getMaterial().getOutputVol(), bom.getVolPerDesign(), bom.getMaterialPosition(), remainVol, 
+					frozenVol,tem));
+		}
+		
+		return SUCCESS;
+	}
+	
+	public void updateBom(){
+		
+	}
+	
+	public String showAddDesign(){
+		return SUCCESS;
+	}
+	
+	public String addDesign(){
+		Design design = new Design();
+		
+		bomservice.addDesign(design);
+		return SUCCESS;
+	}
+}

@@ -1,0 +1,34 @@
+package productManage.dao.yrd.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.dao.BaseDao;
+import productManage.dao.yrd.ModelConditionDao;
+import productManage.model.yrd.ModelCondition;
+
+
+/**
+ * @author yrd
+ * @date 创建时间2016-02-28
+ */
+
+public class ModelConditionDaoImpl implements ModelConditionDao {
+	
+	@Autowired
+	private BaseDao baseDao;
+	
+	@Override
+	public List<ModelCondition> findModelCondtion(Date date){
+		Session session = baseDao.getNewSession();	
+		String hql = "from productManage.Model.ModelCondition as m where m.modelConditionDate='"+date+"'";
+		Query query = session.createQuery(hql);
+		List<ModelCondition> list = query.list();
+		return list;
+	}
+
+}

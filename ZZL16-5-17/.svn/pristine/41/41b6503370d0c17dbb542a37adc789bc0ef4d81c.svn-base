@@ -1,0 +1,14 @@
+package productManage.service.conditionSheets.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.yrd.TechniqueConditionDao;
+import productManage.service.conditionSheets.TechniqueConditionService;
+
+@Service
+public class TechniqueConditionServiceImpl implements TechniqueConditionService{
+	
+}

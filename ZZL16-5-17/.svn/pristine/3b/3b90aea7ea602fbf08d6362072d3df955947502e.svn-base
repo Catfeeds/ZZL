@@ -1,0 +1,16 @@
+package productManage.service.ListManage;
+
+import java.util.List;
+
+import productManage.model.cs.OutSource;
+import productManage.model.cs.OutSourceDetail;
+import productManage.vo.PageBean;
+
+public interface TailorPhaseService {//裁剪排单
+	
+
+	public PageBean getAllOutSourceInTailor(int page, int rowsPerPage);
+	public PageBean inquireOutSourceInTailor(String hql,int page, int rowsPerPage);
+	
+	
+}

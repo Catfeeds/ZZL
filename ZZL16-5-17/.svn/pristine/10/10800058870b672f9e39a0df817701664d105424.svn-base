@@ -1,0 +1,15 @@
+package productManage.service.supplement;
+
+import java.util.List;
+
+import productManage.model.lhj.Material;
+import productManage.model.szl.Supplement;
+import productManage.model.szl.SupplementMaterial;
+
+public interface SupplementCreateService {
+
+	public void createSupplement(Supplement supplement);
+	public void createSupplementMaterial(SupplementMaterial sm);
+	public List<Material> getMaterial(String materialCode,String materialName,String materialType);//获取物料
+	
+}

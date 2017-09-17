@@ -1,0 +1,45 @@
+package productManage.service.ListManage.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.model.cs.OutSource;
+import productManage.service.PageService;
+import productManage.service.ListManage.TailorPhaseService;
+import productManage.vo.PageBean;
+import productManage.vo.listManage.TailorManageVO;
+@Service
+public class TailorPhaseServiceImpl implements TailorPhaseService {
+
+	@Autowired
+	PageService pageService;
+	
+	@Override
+	public PageBean getAllOutSourceInTailor(int page, int rowsPerPage) {
+		String hql = "select o from OutSource o,Production p where o.production.productionID = p.productionID and p.productionState ='工艺'" ;
+		PageBean result = pageService.queryForPage(hql, rowsPerPage, page);
+        List<OutSource> list = result.getList();
+        List<TailorManageVO> list_vo = new ArrayList<TailorManageVO>();
+        for(int i=0;i<list.size();i++){
+        	list_vo.add(new TailorManageVO(list.get(i)));
+        }
+        result.setList(list_vo);
+    	return result;
+	}
+
+	@Override
+	public PageBean inquireOutSourceInTailor(String hql, int page, int rowsPerPage) {
+		PageBean result = pageService.queryForPage(hql, rowsPerPage, page);
+        List<OutSource> list = result.getList();
+        List<TailorManageVO> list_vo = new ArrayList<TailorManageVO>();
+        for(int i=0;i<list.size();i++){
+        	list_vo.add(new TailorManageVO(list.get(i)));
+        }
+        result.setList(list_vo);
+    	return result;
+	}
+
+}

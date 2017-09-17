@@ -1,0 +1,35 @@
+package productManage.dao.lhj.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import productManage.dao.BaseDao;
+import productManage.dao.lhj.VendorDao;
+import productManage.model.lhj.Vendor;
+@Repository
+public class VendorDaoImpl implements VendorDao{
+
+	@Autowired
+	private BaseDao baseDao;
+	
+	@Override
+	public void add(Vendor vendor) {
+		// TODO Auto-generated method stub
+		baseDao.save(vendor);
+	}
+
+	@Override
+	public void update(Vendor vendor) {
+		// TODO Auto-generated method stub
+		baseDao.update(vendor);
+	}
+
+	@Override
+	public List<Vendor> getVendorsByName(String vendorName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,52 @@
+package productManage.action.material;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.PageAction;
+import productManage.service.material.BomService;
+import productManage.vo.PageBean;
+import productManage.vo.technique.TechniqueConstants;
+
+public class BomAction extends PageAction{
+
+	private static final long serialVersionUID = 1L;
+	@Autowired
+	private BomService bomservice;
+	
+	private String designCode;
+
+	private String putawayDate;
+	
+	public String showDesignList(){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(TechniqueConstants.SEARCH_TECHNIQUE_PARAMS[0],designCode);
+		params.put(TechniqueConstants.SEARCH_TECHNIQUE_PARAMS[1], putawayDate);
+		try {
+			this.pageBean = bomservice.queryDesign(this.rowsPerPage, this.page, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.pageBean=new PageBean();
+			return ERROR;
+		}
+		return SUCCESS;
+	}
+	
+	public String getDesignCode() {
+		return designCode;
+	}
+
+	public String getPutawayDate() {
+		return putawayDate;
+	}
+
+	public void setDesignCode(String designCode) {
+		this.designCode = designCode;
+	}
+
+	public void setPutawayDate(String putawayDate) {
+		this.putawayDate = putawayDate;
+	}
+}

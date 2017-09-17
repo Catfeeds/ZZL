@@ -1,0 +1,32 @@
+package productManage.service.supplement;
+
+import java.sql.Date;
+import java.util.List;
+import java.util.Map;
+
+import productManage.model.szl.Supplement;
+import productManage.vo.PageBean;
+
+public interface SupplementManagerService {
+	
+	public Supplement getSupplementDetail(int supplementID);
+	
+	public void changeSupplementState(String supplemntState);
+	
+	public PageBean querySupplements(int pageSize,int page,Map<String,Object> params);
+
+	public PageBean getAllSupplement(int page, int rowsPerPage);
+
+	
+	public List<Supplement> getSupplementByCode(String supplementCode);
+	
+	public List<Supplement> getSupplementByDesignCode(String designCode);
+	
+	public List<Supplement> getSupplementByDate(Date supplementDate);
+	
+	public List<Supplement> getSupplementByMaterialType(String materialType);
+	
+	public List<Supplement> getSupplementByVendorName(String vendorName);
+	
+	public List<Supplement> getSupplementByState(String supplementState);
+}

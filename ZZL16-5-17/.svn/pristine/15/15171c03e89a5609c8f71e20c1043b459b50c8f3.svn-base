@@ -1,0 +1,108 @@
+package productManage.service.supplement.impl;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.szl.SupplementDao;
+import productManage.dao.szl.SupplementMaterialDao;
+import productManage.model.lhj.Material;
+import productManage.model.lhj.Supply;
+import productManage.model.szl.Supplement;
+import productManage.model.szl.SupplementMaterial;
+import productManage.service.PageService;
+import productManage.service.supplement.SupplementCreateService;
+import productManage.vo.PageBean;
+import productManage.vo.supplement.SupplementConstants;
+import productManage.vo.supplement.SupplementMaterialVO;
+
+/**
+ * @author SZL
+ * @date 2016-3-23
+ */
+
+@Service
+public class SupplementCreateServiceImpl implements SupplementCreateService{
+	@Autowired
+	PageService pageService;
+	
+	@Autowired
+	private SupplementDao supplementDao;
+	public void setSupplementDao(SupplementDao supplementDao){
+		this.supplementDao=supplementDao;
+	}
+	public SupplementDao getSupplementDao(){
+		return supplementDao;
+	}
+	
+	@Autowired
+	private SupplementMaterialDao supplementMaterialDao;
+	public void setSupplementMaterialDao(SupplementMaterialDao supplementMaterialDao){
+		this.supplementMaterialDao=supplementMaterialDao;
+	}
+	public SupplementMaterialDao getSupplementMaterialDao(){
+		return supplementMaterialDao;
+	}
+	
+	@Override
+	public void createSupplement(Supplement supplement){
+		supplementDao.add(supplement);
+	}
+	@Override
+	public void createSupplementMaterial(SupplementMaterial supplementMaterial){
+		supplementMaterialDao.add(supplementMaterial);
+	}
+	@Override
+	public List<Material> getMaterial(String materialCode,String materialName,String materialType){
+		return null;
+		
+	}
+	@Override
+	public PageBean queryLinings(int pageSize, int page, Map<String, Object> params) {
+		String hql = "select supply from Supply as supply inner join supply.material as material "
+				+ "where supply.supplyId > 0 ";
+		String shellAccessoryType = (String) params.get(SupplementConstants.SEARCH_LININGS_PARAMS[0]);
+		String materialCode = (String) params.get(SupplementConstants.SEARCH_LININGS_PARAMS[1]);
+		String materialName = (String) params.get(SupplementConstants.SEARCH_LININGS_PARAMS[2]);
+		
+		if( shellAccessoryType != null ){
+			hql = hql+ "and material.shellAccessoryType like '%" + shellAccessoryType + "%' )))";		
+		}
+		
+		if( materialCode != null ){
+			hql = hql+ "and material.materialCode like '%" + materialCode + "%' )))";		
+		}
+		
+		if( materialName != null ){
+			hql = hql+ "and material.materialName like '%" + materialName + "%' )))";		
+		}
+		
+		System.out.println(hql);
+		PageBean result = pageService.queryForPage(hql, pageSize, page);
+		List<Supply> supplyList= (List<Supply>)result.getList();
+    	List<SupplementMaterialVO> supplementMaterialListVO = packagingVO(supplyList);
+    	
+    	result.setList(supplementMaterialListVO);
+		
+		return result;
+	}
+	private List<SupplementMaterialVO> packagingVO(List<Supply> supplyList) {
+		List<SupplementMaterialVO> voList = new ArrayList<SupplementMaterialVO>();
+		for(Supply s : supplyList){
+			SupplementMaterialVO vo = new SupplementMaterialVO();
+			vo.setColorDescription(s.getMaterial().getColorDescription());
+			vo.setMaterialCode(s.getMaterial().getMaterialCode());
+			vo.setMaterialIngredient(s.getMaterial().getMaterialIngredient());
+			vo.setMaterialName(s.getMaterial().getMaterialName());
+			vo.setShellAccessoryType(s.getMaterial().getShellAccessoryType());
+			vo.setVendorName(s.getVendor().getVendorName());
+			voList.add(vo);
+		}		
+		return voList;
+	}
+	
+}

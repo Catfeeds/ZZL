@@ -1,0 +1,33 @@
+package productManage.vo.supplement;
+
+public class SupplementMaterialCreateVO {
+
+	private int supplyID;
+	private String specification;
+	private int vol;
+	private String usage;
+	public int getSupplyID() {
+		return supplyID;
+	}
+	public void setSupplyID(int supplyID) {
+		this.supplyID = supplyID;
+	}
+	public String getSpecification() {
+		return specification;
+	}
+	public void setSpecification(String specification) {
+		this.specification = specification;
+	}
+	public int getVol() {
+		return vol;
+	}
+	public void setVol(int vol) {
+		this.vol = vol;
+	}
+	public String getUsage() {
+		return usage;
+	}
+	public void setUsage(String usage) {
+		this.usage = usage;
+	}
+}

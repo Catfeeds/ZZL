@@ -1,0 +1,54 @@
+package productManage.service.material.impl;
+
+import java.util.Date;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.lhj.MaterialDao;
+import productManage.dao.tms.DesignDAO;
+import productManage.service.PageService;
+import productManage.service.material.BomService;
+import productManage.util.DateFormat;
+import productManage.vo.PageBean;
+import productManage.vo.technique.TechniqueConstants;
+
+@Service
+public class BomServiceImpl implements BomService{
+
+	@Autowired
+	private MaterialDao materialdao;
+	@Autowired
+	private DesignDAO designdao;
+	@Autowired
+	private PageService pageservice;
+	@Override
+	public PageBean queryDesign(int pageSize, int page,
+			Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		String hql="select d from Design d";
+		String designCode = (String)params.get(TechniqueConstants.SEARCH_TECHNIQUE_PARAMS[0]);
+		String putawayDate = (String)params.get(TechniqueConstants.SEARCH_TECHNIQUE_PARAMS[1]);
+
+		if((!(designCode==null))&&(!(putawayDate==null))){
+			Date date = DateFormat.StringToDate(putawayDate);
+			hql+=" where ";
+			hql+="d.designCode='"+designCode+"'"+" and d.designPutawayDate='"+date+"'";
+		}
+		else{
+			if(!(designCode==null)){
+				hql+=" where ";
+				hql+="d.designCode like '%"+designCode+"%'";
+			}
+			if(!(putawayDate==null)){
+				Date date = DateFormat.StringToDate(putawayDate);
+				hql+=" where ";
+				hql+="d.designPutawayDate='"+date+"'";
+			}
+		}
+			
+		PageBean pageBean = pageservice.queryForPage(hql, pageSize, page);
+		return pageBean;
+	}
+}

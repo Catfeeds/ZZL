@@ -1,0 +1,16 @@
+package productManage.action.conditionSheets;
+
+import productManage.action.PageAction;
+
+public class ModelConditionAction extends PageAction {
+	
+	private static final long serialVersionUID = 1L;
+	
+	public String modelCondition() {
+		
+		return SUCCESS;
+		
+	}
+	
+
+}

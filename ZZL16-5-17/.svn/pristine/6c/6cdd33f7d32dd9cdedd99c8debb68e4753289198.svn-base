@@ -1,0 +1,29 @@
+package productManage.service.purchase;
+
+import java.sql.Date;
+import java.util.List;
+
+import productManage.model.tyc.Purchase;
+import productManage.vo.purchase.purchaseVO;
+
+/**  
+* 类说明   
+*  
+* @author tyc  
+* @date 2016年3月8日 新建 
+*/
+public interface PurchaseService {
+	
+    public List<Purchase> allPurchase();//返回所有采购单
+    
+    public purchaseVO purchaseDetail(int purchaseID);//采购单详细信息
+	
+	public List<Purchase> selectPurchase(Date Eta,Date scheduledPurchaseDate,int vendorId,String purchaseState,int styleId,int oldOrNew);//搜索采购单
+
+	public void updatePurchaseState(int purchaseID,String state);//更新采购状态
+	
+	public Purchase usingMaterialAudit(int purchaseId);//用料审核
+	
+	public Purchase stockAudit(int purchaseId);//库存审核
+
+}

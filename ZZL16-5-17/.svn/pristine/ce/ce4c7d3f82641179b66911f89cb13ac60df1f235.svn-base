@@ -1,0 +1,60 @@
+package productManage.service.technique.impl;
+/**
+ * @author TMS
+ * @date 2016-2-29
+ */
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import productManage.dao.tms.TechniqueDAO;
+import productManage.model.tms.Technique;
+import productManage.service.PageService;
+import productManage.service.technique.TechniqueService;
+import productManage.vo.PageBean;
+@Service
+public class TechniqueServiceImpl implements TechniqueService {
+	@Autowired
+	private TechniqueDAO techniqueDao;
+	public TechniqueDAO getTechniqueDao() {
+		return techniqueDao;
+	}
+
+	public void setTechniqueDao(TechniqueDAO techniqueDao) {
+		this.techniqueDao = techniqueDao;
+	}
+	
+	@Autowired
+	private PageService pageService;
+	
+	@Override
+	public List<Technique> getAll() {
+		// TODO Auto-generated method stub
+		return techniqueDao.findAll();
+		
+	}
+	/*
+	@Override
+	public Technique getByID(String id) {
+		// TODO Auto-generated method stub
+		return techniqueDao.findByTechniqueID(id);
+	}
+
+	@Override
+	public List<Technique> getByDate(Date date) {
+		// TODO Auto-generated method stub
+		return techniqueDao.findByDate(date);
+	}
+	 */
+	@Override
+	public void save(Technique technique) {
+		// TODO Auto-generated method stub
+		techniqueDao.save(technique);
+	}
+
+
+
+}

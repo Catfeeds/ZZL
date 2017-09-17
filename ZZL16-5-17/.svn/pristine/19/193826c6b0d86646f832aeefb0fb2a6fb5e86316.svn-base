@@ -1,0 +1,17 @@
+package productManage.dao.wcy;
+
+import java.util.List;
+
+import productManage.model.yk.Orders;
+
+public interface OrdersDAO {
+
+	public void save(Orders orders);
+	public void update(Orders orders);
+	public List<Orders> getAll();
+	public Orders getOrderByID(int orderID);
+	public Orders getOrderByCode(String orderCode);
+	public List<Orders> getOrderList(int designID);
+	public Orders getOrderByProductionID(int productionID);
+	public Orders getOrderByInquiryID(int inquiryID);
+}

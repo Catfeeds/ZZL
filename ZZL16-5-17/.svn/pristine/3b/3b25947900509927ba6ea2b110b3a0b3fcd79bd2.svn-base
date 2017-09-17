@@ -1,0 +1,194 @@
+package productManage.action.system;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.BaseAction;
+import productManage.model.wy.Authority;
+import productManage.service.system.AuthorityService;
+
+public class GetAuthorityAction extends BaseAction{
+
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	private AuthorityService authorityService;
+	private List<Object> authoList;
+	private List<Object> roleAuthoList;
+	private Authority detail;
+	private int roleID;
+	private String authorityID;
+	private String names;
+	
+	public List<Object> getAuthoList() {
+		return authoList;
+	}
+
+	public void setAuthoList(List<Object> authoList) {
+		this.authoList = authoList;
+	}
+
+	public Authority getDetail() {
+		return detail;
+	}
+
+	public void setDetail(Authority detail) {
+		this.detail = detail;
+	}
+
+	public List<Object> getRoleAuthoList() {
+		return roleAuthoList;
+	}
+
+	public void setRoleAuthoList(List<Object> roleAuthoList) {
+		this.roleAuthoList = roleAuthoList;
+	}
+
+	public int getRoleID() {
+		return roleID;
+	}
+
+	public void setRoleID(int roleID) {
+		this.roleID = roleID;
+	}
+
+	public String getAuthorityID() {
+		return authorityID;
+	}
+
+	public void setAuthorityID(String authorityID) {
+		this.authorityID = authorityID;
+	}
+
+	public String getNames() {
+		return names;
+	}
+
+	public void setNames(String names) {
+		this.names = names;
+	}
+
+	public String getAuthorityDetail(){
+		System.out.println(authorityID.split("_")[2]);
+		detail = authorityService.getAuthorityById(authorityID.split("_")[2]);
+		System.out.println(detail.getHighAuthName()+"_"+detail.getMiddleAuthName());
+		return SUCCESS;
+	}
+
+	public String getAuthorityTree(){
+		String fatherId = request.getParameter("id");
+		
+		//依次取高层节点
+		authoList = new ArrayList<Object>();
+		List<String> highAuthoList = authorityService.getAllHighAuthoName();
+		for (int i = 0; i < highAuthoList.size(); i++) {
+			String highAuthoName = highAuthoList.get(i);
+			Map<String, Object> highNode = new HashMap<String, Object>();
+			highNode.put("id",  highAuthoName);
+			highNode.put("text", highAuthoName);
+			
+			//依次取中层节点
+			List<Object> middleNodeList = new ArrayList<Object>();
+			List<String> middleAuthoNameList = authorityService.getMiddleByHigh(highAuthoName);
+			if (middleAuthoNameList.size()==0) {
+				highNode.put("children", false);
+			}
+			for(int j = 0;j < middleAuthoNameList.size();j++){
+				String middleAuthoName = middleAuthoNameList.get(j);
+				
+				Map<String, Object> middleNode = new HashMap<String, Object>();
+				middleNode.put("id", highAuthoName+"_"+middleAuthoName);
+				middleNode.put("text", middleAuthoName);
+				
+				//取底层节点
+				List<Object> lowNodeList = new ArrayList<Object>();
+				List<Authority> lowAuthoList = authorityService.getLowByMiddleHigh(middleAuthoName, highAuthoName);
+				if (lowAuthoList.size()==0) {
+					middleNode.put("children", false);
+				}
+				for(int k = 0;k < lowAuthoList.size();k++){
+					Authority lowAuthority = lowAuthoList.get(k);
+					
+					Map<String, Object> lowNode = new HashMap<String, Object>();
+					lowNode.put("id", highAuthoName+"_"+middleAuthoName+"_"+lowAuthority.getLowAuthName());
+					lowNode.put("text", lowAuthority.getLowAuthName());
+					lowNode.put("children", false);
+					
+					lowNodeList.add(lowNode);
+					
+				}
+				
+				middleNode.put("children", lowNodeList);
+				middleNodeList.add(middleNode);
+			}
+			highNode.put("children", middleNodeList);
+			
+			authoList.add(highNode);
+		}
+		return SUCCESS;
+	}
+	
+	public String getRoleAuthorityTree(){
+		String fatherId = request.getParameter("id");
+
+		//依次取高层节点
+		roleAuthoList = new ArrayList<Object>();
+		List<String> highAuthoList = authorityService.getRoleHighAuthoName(roleID);
+		for (int i = 0; i < highAuthoList.size(); i++) {
+			String highAuthoName = highAuthoList.get(i);
+			Map<String, Object> highNode = new HashMap<String, Object>();
+			highNode.put("id", highAuthoName);
+			highNode.put("text", highAuthoName);
+			
+			//依次取中层节点
+			List<Object> middleNodeList = new ArrayList<Object>();
+			List<String> middleAuthoNameList = authorityService.getRoleMiddleByHigh(roleID, highAuthoName);
+			if (middleAuthoNameList.size()==0) {
+				highNode.put("children", false);
+			}
+			for(int j = 0;j < middleAuthoNameList.size();j++){
+				String middleAuthoName = middleAuthoNameList.get(j);
+				Map<String, Object> middleNode = new HashMap<String, Object>();
+				middleNode.put("id", highAuthoName+"_"+middleAuthoName);
+				middleNode.put("text", middleAuthoName);
+				
+				//取底层节点
+				List<Object> lowNodeList = new ArrayList<Object>();
+				List<Authority> lowAuthoList = authorityService.getRoleLowByMiddleHigh(roleID, middleAuthoName, highAuthoName);
+				if (lowAuthoList.size()==0) {
+					middleNode.put("children", false);
+				}
+				for(int k = 0;k < lowAuthoList.size();k++){
+					Authority lowAuthority = lowAuthoList.get(k);
+					
+					Map<String, Object> lowNode = new HashMap<String, Object>();
+					lowNode.put("id", highAuthoName+"_"+middleAuthoName+"_"+lowAuthority.getLowAuthName());
+					lowNode.put("text", lowAuthority.getLowAuthName());
+					lowNode.put("children", false);
+					lowNodeList.add(lowNode);
+					
+				}
+				
+				middleNode.put("children", lowNodeList);
+				middleNodeList.add(middleNode);
+			}
+			highNode.put("children", middleNodeList);
+			
+			roleAuthoList.add(highNode);
+		}
+		return SUCCESS;
+	}
+	
+	public String saveRoleAuthority(){
+		String[]ras = names.split(",");
+		if (roleID<1) {
+			return ERROR;
+		}
+		authorityService.saveRoleAuthority(roleID, ras);
+		return SUCCESS;
+	}
+}

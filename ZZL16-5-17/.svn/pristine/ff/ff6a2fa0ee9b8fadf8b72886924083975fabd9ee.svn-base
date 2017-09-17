@@ -1,0 +1,179 @@
+package productManage.action.customer;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import productManage.action.BaseAction;
+import productManage.action.PageAction;
+import productManage.model.wy.Department;
+import productManage.model.yrd.Customer;
+import productManage.service.customer.CustomerService;
+import productManage.vo.PageBean;
+import productManage.vo.customer.CustomerConstants;
+import productManage.vo.technique.TechniqueConstants;
+
+
+/**
+ * @author yrd
+ * @date 创建时间2016-03-07
+ */
+
+public class CustomerAction extends PageAction {
+	
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	private CustomerService customerService;
+	private String customerContactName;
+	private String customerBrandName;
+	private String customerType;
+	private List<Customer> customerList;
+	
+	
+	public CustomerService getCustomerService(){
+		return customerService;
+	}
+	
+	public void setCustomerService(CustomerService customerService){
+		this.customerService = customerService;
+	}
+	
+	public String getCustomerContactName(){
+		return customerContactName;
+	}
+	
+	public void setCustomerContactName(String customerContactName){
+		this.customerContactName = customerContactName;
+	}
+	
+	public String getCustomerBrandName(){
+		return customerBrandName;
+	}
+	
+	public void setCustomerBrandName(String customerBrandtName){
+		this.customerBrandName = customerBrandName;
+	}
+	
+	public String getCustomerType(){
+		return customerType;
+	}
+	
+	public void setCustomerType(String customerType){
+		this.customerType = customerType;
+	}
+	
+	public List<Customer> getCustomerList() {
+		return customerList;
+	}
+
+	public void setCustomerList(List<Customer> customerList) {
+		this.customerList = customerList;
+	}
+	
+	//显示所有用户
+	public String CustomerManage(){
+//		customerList = customerService.getAll();
+//		System.out.println(customerList.get(0).getCustomerEMail());
+		this.pageBean = customerService.getCustomersByPage(this.rowsPerPage, this.page);
+		return SUCCESS; 
+	}
+	
+
+	public String execute() throws ServletException, IOException{
+//		customerList.clear();
+//		customerContactName = request.getParameter("customerContactName");
+//		customerBrandName = request.getParameter("brandName");
+//		customerType = request.getParameter("Type");
+//		System.out.println(customerBrandName);
+//		System.out.println(customerType);
+//		
+//		if((customerContactName.equals(""))&&(customerBrandName.equals(""))&&(customerType.equals("0"))){
+//			customerList = customerService.getAll();
+//		}else if((!(customerContactName.equals("")))&&(!(customerBrandName.equals("")))
+//				&&(!(customerType.equals("0")))){
+//			List<Customer> tempCustomers = customerService.getByType(customerType);
+//			Customer customer1 = customerService.getByContactName(customerContactName);
+//			Customer customer2 = customerService.getByBrandName(customerBrandName);
+//			for(int i=0;i<customerList.size();i++){
+//				if((tempCustomers.get(i).getCustomerID()==customer1.getCustomerID())
+//						&&(customer1.getCustomerID()==customer2.getCustomerID())){
+//					customerList.add(customer1);
+//					break;
+//				}
+//			}
+//		}else if((!(customerContactName.equals("")))&&(customerBrandName.equals(""))
+//				&&(customerType.equals("0"))){
+//				Customer customer = customerService.getByContactName(customerContactName);
+//				customerList.add(customer);				
+//		}else if((!(customerBrandName.equals("")))&&((customerContactName.equals("")))
+//				&&((customerType.equals("0")))){
+//				Customer customer = customerService.getByBrandName(customerBrandName);
+//				customerList.add(customer);
+//		}else if((!(customerType.equals("0")))&&(customerBrandName.equals(""))
+//				&&((customerContactName.equals("")))){
+//				customerList = customerService.getByType(customerType);
+//		}else if((!(customerContactName.equals("")))
+//					&&(!(customerBrandName.equals("")))
+//					&&((customerType.equals("0")))){
+//				Customer customer1 = customerService.getByContactName(customerContactName);
+//				Customer customer2 = customerService.getByBrandName(customerBrandName);
+//				if(customer1.getCustomerID()==customer2.getCustomerID()){
+//					customerList.add(customer1);
+//				}
+//		}else if((!(customerContactName.equals("")))&&(!(customerType.equals("0")))
+//				&&((customerBrandName.equals("")))){
+//				List<Customer> tempCustomers = customerService.getByType(customerType);
+//				Customer customer = customerService.getByContactName(customerContactName);
+//				for(int i=0;i<customerList.size();i++){
+//					if((tempCustomers.get(i).getCustomerID()==customer.getCustomerID())){
+//						customerList.add(customer);
+//						break;
+//					}
+//				}			
+//		}else if((!(customerBrandName.equals("")))&&(!(customerType.equals("0")))
+//				&&((customerContactName.equals("")))){
+//				List<Customer> tempCustomers = customerService.getByType(customerType);
+//				Customer customer = customerService.getByBrandName(customerBrandName);
+//				for(int i=0;i<customerList.size();i++){
+//					if((tempCustomers.get(i).getCustomerID()==customer.getCustomerID())){
+//						customerList.add(customer);
+//						break;
+//					}
+//				}
+//		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerConstants.SEARCH_CUSTOMER_PARAMS[0],customerContactName);
+		params.put(CustomerConstants.SEARCH_CUSTOMER_PARAMS[1],customerBrandName );
+		params.put(CustomerConstants.SEARCH_CUSTOMER_PARAMS[2],customerType );
+		this.pageBean = customerService.searchCustomersByPage(this.rowsPerPage, this.page, params);
+		return SUCCESS;
+	}
+	
+	public String examine(){
+		System.out.println("enter examine customer");
+		String customerID = request.getParameter("examineID");
+		String customerState = request.getParameter("examineState");
+//		System.out.println(customerID);
+//		System.out.println(customerState);
+		customerService.examineCustomer(customerID,customerState);
+		return SUCCESS;
+	}
+	
+	public String delete(){
+		System.out.println("enter delete customer");
+		String customerID = request.getParameter("deleteID");
+		customerService.deleteCustomer(customerID);
+		return SUCCESS;
+	}
+	
+	
+
+}

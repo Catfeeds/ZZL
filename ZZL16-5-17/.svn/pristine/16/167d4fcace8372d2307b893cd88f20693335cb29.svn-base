@@ -1,0 +1,235 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+	content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+	name='viewport'>
+
+<jsp:include page="../../header.jsp"></jsp:include>
+<link href="<%=request.getContextPath()%>/css/technique.css"
+	rel="stylesheet" type="text/css" />
+<style type="text/css">
+th {
+	text-align: center;
+}
+
+td {
+	text-align: center;
+}
+
+tr {
+	background-color: transparent;
+}
+</style>
+
+<title>ZZL</title>
+</head>
+
+<body class="skin-blue">
+	<!-- header logo: style can be found in header.less -->
+	<header class="header"> <a href="index.html" class="logo">
+		<!-- Add the class icon to your logo image or logo icon to add the margining -->
+		智&nbsp造&nbsp链
+	</a> <!-- Header Navbar: style can be found in header.less --> <nav
+		class="navbar navbar-static-top" role="navigation"> </nav> </header>
+
+	<div class="wrapper row-offcanvas row-offcanvas-left">
+		<!-- Left side column. contains the logo and sidebar -->
+		<jsp:include page="../../navigation.jsp"></jsp:include>
+
+		<!-- Right side column. Contains the navbar and content of the page -->
+		<aside class="right-side"> <!-- Content Header (Page header) -->
+		<section class="content-header">
+		<h1>
+			工艺管理 <small>新增款式工艺单</small>
+		</h1>
+		<ol class="breadcrumb">
+			<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+			<li class="active">Technique</li>
+		</ol>
+		</section> <!-- Main content --> <section class="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-primary">
+
+					<div class="box-header">
+						<h3 class="box-title">新增款式工艺单</h3>
+					</div>
+					<!-- /.box-header -->
+					<!-- form start -->
+					<form role="form" method="post"
+						action="<%=request.getContextPath()%>/Technique/addTecnique">
+						<!-- 新增款式工艺单  -->
+						<div class="row">
+							<div class="col-md-8">
+
+								<div class="table-responsive" style="margin: 0px 50px 50px 23px">
+									<table class="table table-striped">
+										<tbody>
+											<tr>
+												<td><label class="my_label">编号</label></td>
+												<td><input type="text" class="form-control"
+													name="techCode"></td>
+												<td><label class="my_label">款号</label></td>
+												<td><input type="text" class="form-control"
+													name="designCode"></td>
+											</tr>
+											<tr>
+												<td><label class="my_label">制单日期</label></td>
+												<td><input type="text" class="form-control"
+													name="techDate"></td>
+												<td><label class="my_label">参考外发价</label></td>
+												<td><input type="text" class="form-control"></td>
+											</tr>
+											<tr>
+												<td><label class="my_label">名称</label></td>
+												<td colspan="3"><input type="text" class="form-control"
+													name="technique"></td>
+											</tr>
+											<tr>
+												<td><label class="my_label">客户姓名</label></td>
+												<td><input type="text" class="form-control"
+													name="customerName"></td>
+												<td><label class="my_label">工艺技术</label></td>
+												<td><input type="text" class="form-control"
+													name="technique"></td>
+											</tr>
+											<tr>
+												<td><label class="my_label">面料分类</label></td>
+												<td><input type="text" class="form-control"
+													name="techShellType"></td>
+												<td><label class="my_label">样板尺寸</label></td>
+												<td><input type="text" class="form-control"
+													name="techSampleSize"></td>
+											</tr>
+										</tbody>
+									</table>
+									<!-- /.table -->
+								</div>
+							</div>
+						</div>
+
+						<!-- 新增款式工艺单 end-->
+
+						<!-- 工艺清单 -->
+						<div class="box-header">
+							<h3 class="box-title">工艺清单>></h3>
+						</div>
+						<!-- /.box-header -->
+						<div class="table-responsive" style="margin: 0px 50px 50px 23px">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th></th>
+										<th><label class="my_label">部位名称</label></th>
+										<th><label class="my_label">M码</label></th>
+										<th><label class="my_label">公差（厘米）</label></th>
+									</tr>
+								</thead>
+								<tbody id="tech_list">
+									<tr>
+										<td><input type="button" value="add" id="addTable"
+											class="btn btn-primary"></td>
+										<td><input type="text" class="form-control"></td>
+										<td><select class="form-control">
+												<option>XS</option>
+												<option>S</option>
+												<option>M</option>
+												<option>L</option>
+												<option>XL</option>
+												<option>XXL</option>
+										</select></td>
+										<td><input type="text" class="form-control"></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- /.table -->
+						</div>
+						<!-- /.table-responsive -->
+						<!-- 工艺清单  end-->
+
+						<!-- 缝纫工艺 -->
+						<div class="box-header">
+							<h3 class="box-title">缝纫工艺流程>></h3>
+						</div>
+						<!-- /.box-header -->
+						<div class="row">
+							<div class="col-md-8">
+								<div class="table-responsive" style="margin: 0px 50px 50px 23px">
+									<table class="table table-striped">
+										<tbody>
+											<tr>
+												<td><label class="my_label">作缝大小</label></td>
+												<td><input type="text" class="form-control"
+													name="techCode"></td>
+												<td><label class="my_label">线距</label></td>
+												<td><input type="text" class="form-control"
+													name="designCode"></td>
+											</tr>
+											<tr>
+												<td><label class="my_label">整烫要求</label></td>
+												<td colspan="3"><input type="text" class="form-control"
+													name="technique"></td>
+											</tr>
+											<tr>
+												<td><label class="my_label">注意</label></td>
+												<td colspan="3"><input type="text" class="form-control"
+													name="technique"></td>
+											</tr>
+										</tbody>
+									</table>
+									<!-- /.table -->
+								</div>
+							</div>
+
+							<div class="table-responsive" style="margin: 0px 50px 50px 23px">
+								<table class="table table-striped" id="tech_inventory">
+									<tr>
+										<th><label class="my_label">工艺部位</label></th>
+										<th><label class="my_label">具体工艺</label></th>
+										<th><label class="my_label">操作</label></th>
+									</tr>
+									<tr>
+										<td><input type="text" class="form-control"></td>
+										<td><input type="text" class="form-control"></td>
+										<td><input type="button" value="添加" id="addTech"
+											class="btn btn-primary"><small>(点击添加后数据生效)</small></td>
+									</tr>
+								</table>
+								<!-- /.table -->
+							</div>
+							<!-- /.table-responsive -->
+						</div>
+						<!-- 缝纫工艺  end-->
+					</form>
+				</div>
+				<!-- /.box-->
+			</div>
+		</div>
+		</section> </aside>
+	</div>
+
+
+	<script>
+		$("#addTable")
+				.click(
+						function() {
+							var tr = "<tr><td></td><td> <input type='text' class='form-control'></td>"
+									+ "<td><select class='form-control'>"
+									+ "<option>XS</option>"
+									+ "<option>S</option>"
+									+ "<option>M</option>"
+									+ "<option>L</option>"
+									+ "<option>XL</option>"
+									+ "<option>XXL</option>"
+									+ "</select></td>"
+									+ "<td> <input type='text' class='form-control'></td></tr>";
+							$("#tech_list").append(tr);
+						});
+	</script>
+</body>
+</html>

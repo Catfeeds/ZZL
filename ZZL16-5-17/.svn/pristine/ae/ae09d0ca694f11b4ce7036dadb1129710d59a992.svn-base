@@ -1,0 +1,111 @@
+package productManage.action.supplement;
+
+
+import java.io.IOException;
+import java.sql.Date;
+
+import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import productManage.action.BaseAction;
+import productManage.model.User;
+import productManage.model.szl.Supplement;
+import productManage.model.zky.Production;
+import productManage.service.production.ProductionService;
+import productManage.service.supplement.SupplementCreateService;
+import productManage.vo.production.ProductionVO;
+
+/**
+ * @author SZL
+ * @date 2016-3-23
+ */
+
+@Controller
+public class AddSupplementAction extends BaseAction{
+
+	private static final long serialVersionUID = 1L;
+	@Autowired
+	private SupplementCreateService supplementCreateService;
+		
+	public void setSupplementCreateService(SupplementCreateService supplementCreateService) {
+		this.supplementCreateService = supplementCreateService;
+	}
+	
+	public SupplementCreateService getSupplementCreateService() {
+		return supplementCreateService;
+	}
+	
+	public String createLiningSupplement()throws ServletException, IOException{
+		Supplement supplement = new Supplement();
+		String supplementType = request.getParameter("supplementType");
+		String supplementCode = request.getParameter("supplementCode");
+		String productionCode = request.getParameter("productionCode");
+		String supplementDate = request.getParameter("supplementDate");
+		String userName = request.getParameter("userName");
+		String supplementComment = request.getParameter("supplementComment");
+		
+		User user = findUserByName(userName);
+		Production production = findProductionByCode(productionCode);
+		Date date = string_to_Date(supplementDate);
+		
+		
+		supplement.setProduction(production);
+		supplement.setSupplementCode(supplementCode);
+		supplement.setSupplementComment(supplementComment);
+		supplement.setSupplementDate(date);
+		supplement.setSupplementState("0");
+		supplement.setSupplementType(supplementType);
+		supplement.setUser(user);
+		supplementCreateService.createSupplement(supplement);
+		
+		
+		
+		return SUCCESS;
+	}
+
+	public String createAuxiliarySupplement()throws ServletException, IOException{
+		Supplement supplement = new Supplement();
+		String supplementType = request.getParameter("supplementType");
+		String supplementCode = request.getParameter("supplementCode");
+		String productionCode = request.getParameter("productionCode");
+//		String materialType = request.getParameter("materialType");
+		String supplementDate = request.getParameter("supplementDate");
+		String userName = request.getParameter("userName");
+		String supplementComment = request.getParameter("supplementComment");
+		
+		User user = findUserByName(userName);
+		Production production = findProductionByCode(productionCode);
+		Date date = string_to_Date(supplementDate);
+		
+		
+		supplement.setProduction(production);
+		supplement.setSupplementCode(supplementCode);
+		supplement.setSupplementComment(supplementComment);
+		supplement.setSupplementDate(date);
+		supplement.setSupplementState("0");
+		supplement.setSupplementType(supplementType);
+		supplement.setUser(user);
+		supplementCreateService.createSupplement(supplement);
+		
+		
+		
+		return SUCCESS;
+	}
+	
+	private Date string_to_Date(String supplementDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Production findProductionByCode(String productionCode) {
+		//ProductionService productionService = null;
+		return null;
+	}
+
+	private User findUserByName(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

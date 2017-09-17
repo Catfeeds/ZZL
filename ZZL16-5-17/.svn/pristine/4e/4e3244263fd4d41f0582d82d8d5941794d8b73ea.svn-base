@@ -1,0 +1,82 @@
+package productManage.action.qc;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import productManage.action.PageAction;
+import productManage.service.qc.QcService;
+
+@Controller
+public class QCListAction extends PageAction{
+
+	
+	@Autowired
+	private QcService qcService;
+	private String userId;
+	private String qcID;
+	/*List<Qc>  QCList = new ArrayList<Qc>();
+	
+	public List<Qc> getQCList() {
+		return QCList;
+	}
+
+	public void setQCList(List<Qc> qCList) {
+		QCList = qCList;
+	}*/
+
+	public String getQcID() {
+		return qcID;
+	}
+
+	public void setQcID(String qcID) {
+		this.qcID = qcID;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public QcService getQcService() {
+		return qcService;
+	}
+
+	public void setQcService(QcService qcService) {
+		this.qcService = qcService;
+	}
+	
+	public String showQcList() {
+	    //QCList = qcService.getAll();
+		this.pageBean = qcService.getAll(this.rowsPerPage,this.page);
+		return "success";
+	}
+	public String showSearchedQcList(){
+		String designCode = request.getParameter("designCode");
+		//System.out.print("hahah--------"+designCode);
+		String pQCTime = request.getParameter("pQCTime");
+		String userName = request.getParameter("userName");
+		String qCState = request.getParameter("qCState");
+		//this.pageBean = qcService.getSearched(this.page,this.rowsPerPage,designCode,pQCTime,userName,qCState);
+		//ArrayList<QCVO> qcvo = (ArrayList<QCVO>) this.pageBean.getAllList();
+		//System.out.println("xainziatotal="+qcvo.size());
+		
+		this.pageBean = qcService.getSearched(this.rowsPerPage, this.page, designCode, pQCTime, userName, qCState);
+		return "success";
+		//7 17 10 18 6 12 2 9 8 19 11 13
+		//ZJD12 YOPS8(state) 1980-08-08 08:08:08 84QUJF6ANM(name) KUTI8MDYF4P3LGRW9W J(code)
+	}
+	public String setCharge(){
+		int userID = Integer.parseInt(this.userId);
+		int qcID = Integer.parseInt(this.qcID);
+		//System.out.println("aaaaaaaaaa"+userID);
+		
+		qcService.setCharge(userID,qcID);
+		this.pageBean = qcService.getAll(this.rowsPerPage,this.page);
+		return "success";
+		
+	}
+	
+}

@@ -1,0 +1,137 @@
+package productManage.vo.purchase;
+
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.stereotype.Component;
+import productManage.model.lhj.Vendor;
+import productManage.vo.production.OrderDetailVO;
+import productManage.model.cs.OutSourceDetail;
+import productManage.model.lhj.Material;
+
+/**  
+* 类说明   
+*  
+* @author tyc  
+* @date 2016年4月2日 新建 
+*/
+@Component
+public class purchaseVO {
+	private String designNewOld;
+	private String purchaseCode;
+	private String designCode;
+	private String customerName;
+	private String purDocumentDate;
+	private String designName;
+	private String vendors;
+	private String userName;
+	private String purchaseComment;
+	private String picURL;
+	private List<bomVO> materials;
+	private List<OrderDetailVO> outSourceDetails;
+	private String scheduledPurchaseDate;
+	
+	public purchaseVO(){
+		
+	}
+	public purchaseVO(String designNewOld, String purchaseCode, String designCode, String customerName,
+			String purDocumentDate, String designName, String vendors, String userName, String purchaseComment,
+			String picURL, List<bomVO> materials, List<OrderDetailVO> outSourceDetails,String scheduledPurchaseDate) {
+		super();
+		this.designNewOld = designNewOld;
+		this.purchaseCode = purchaseCode;
+		this.designCode = designCode;
+		this.customerName = customerName;
+		this.purDocumentDate = purDocumentDate;
+		this.designName = designName;
+		this.vendors = vendors;
+		this.userName = userName;
+		this.purchaseComment = purchaseComment;
+		this.picURL = picURL;
+		this.materials = materials;
+		this.outSourceDetails = outSourceDetails;
+		this.scheduledPurchaseDate = scheduledPurchaseDate;
+	}
+	public String getDesignNewOld() {
+		return designNewOld;
+	}
+	public void setDesignNewOld(String designNewOld) {
+		this.designNewOld = designNewOld;
+	}
+	public String getPurchaseCode() {
+		return purchaseCode;
+	}
+	public void setPurchaseCode(String purchaseCode) {
+		this.purchaseCode = purchaseCode;
+	}
+	public String getDesignCode() {
+		return designCode;
+	}
+	public void setDesignCode(String designCode) {
+		this.designCode = designCode;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getPurDocumentDate() {
+		return purDocumentDate;
+	}
+	public void setPurDocumentDate(String purDocumentDate) {
+		this.purDocumentDate = purDocumentDate;
+	}
+	public String getDesignName() {
+		return designName;
+	}
+	public void setDesignName(String designName) {
+		this.designName = designName;
+	}
+	public String getVendors() {
+		return vendors;
+	}
+	public void setVendors(String vendors) {
+		this.vendors = vendors;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getPurchaseComment() {
+		return purchaseComment;
+	}
+	public void setPurchaseComment(String purchaseComment) {
+		this.purchaseComment = purchaseComment;
+	}
+	public String getPicURL() {
+		return picURL;
+	}
+	public void setPicURL(String picURL) {
+		this.picURL = picURL;
+	}
+	public List<bomVO> getMaterials() {
+		return materials;
+	}
+	public void setMaterials(List<bomVO> materials) {
+		this.materials = materials;
+	}
+	public List<OrderDetailVO> getOutSourceDetails() {
+		return outSourceDetails;
+	}
+	public void setOutSourceDetails(List<OrderDetailVO> outSourceDetails) {
+		this.outSourceDetails = outSourceDetails;
+	}
+	public String getScheduledPurchaseDate() {
+		return scheduledPurchaseDate;
+	}
+	public void setScheduledPurchaseDate(String scheduledPurchaseDate) {
+		this.scheduledPurchaseDate = scheduledPurchaseDate;
+	}
+	
+	
+	
+
+}

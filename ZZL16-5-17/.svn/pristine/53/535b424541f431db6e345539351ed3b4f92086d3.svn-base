@@ -1,0 +1,162 @@
+package productManage.action.supplement;
+
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import productManage.action.PageAction;
+import productManage.model.User;
+import productManage.model.szl.Supplement;
+import productManage.model.zky.Production;
+import productManage.service.supplement.SupplementCreateService;
+import productManage.util.DateFormat;
+import productManage.vo.PageBean;
+import productManage.vo.supplement.SupplementConstants;
+
+/**
+ * @author SZL
+ * @date 2016-3-23
+ */
+
+@Controller
+public class AddSupplementAction extends PageAction{
+
+	private static final long serialVersionUID = 1L;
+	@Autowired
+	private SupplementCreateService supplementCreateService;
+		
+	public void setSupplementCreateService(SupplementCreateService supplementCreateService) {
+		this.supplementCreateService = supplementCreateService;
+	}
+	
+	public SupplementCreateService getSupplementCreateService() {
+		return supplementCreateService;
+	}
+	
+	private String shellAccessoryType;
+	private String materialCode;
+	private String materialName;
+	public String addSupplementMaterial(){
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(!(this.shellAccessoryType.equals(""))){
+			params.put(SupplementConstants.SEARCH_LININGS_PARAMS[0], this.shellAccessoryType);
+		}
+		if(!(this.materialCode.equals(""))){
+			params.put(SupplementConstants.SEARCH_LININGS_PARAMS[1], this.materialCode);
+		}
+		if(!(this.materialName.equals(""))){
+			params.put(SupplementConstants.SEARCH_LININGS_PARAMS[2], this.materialName);
+		}
+		try {
+			this.pageBean = supplementCreateService.queryLinings(this.rowsPerPage, this.page, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.pageBean = new PageBean();
+			return ERROR;
+		}
+		return SUCCESS;
+		
+	}
+	public String createLiningSupplement()throws ServletException, IOException{
+		Supplement supplement = new Supplement();
+		String supplementType = request.getParameter("supplementType");		
+		String supplementCode = request.getParameter("supplementCode");
+		String productionCode = request.getParameter("productionCode");
+		Date supplementDate =DateFormat.StringToDate( request.getParameter("supplementDate"));
+		String userName = request.getParameter("userName");
+		String supplementComment = request.getParameter("supplementComment");
+		
+		User user = findUserByName(userName);
+		Production production = findProductionByCode(productionCode);
+
+		
+		
+		supplement.setProduction(production);
+		supplement.setSupplementCode(supplementCode);
+		supplement.setSupplementComment(supplementComment);
+		supplement.setSupplementDate(supplementDate);
+		supplement.setSupplementState("待审核");
+		supplement.setSupplementType(supplementType);
+		supplement.setUser(user);
+		supplementCreateService.createSupplement(supplement);
+		
+		
+		
+		return SUCCESS;
+	}
+
+	public String createAuxiliarySupplement()throws ServletException, IOException{
+		Supplement supplement = new Supplement();
+		String supplementType = request.getParameter("supplementType");
+		String supplementCode = request.getParameter("supplementCode");
+		String productionCode = request.getParameter("productionCode");
+//		String materialType = request.getParameter("materialType");
+		String supplementDate = request.getParameter("supplementDate");
+		String userName = request.getParameter("userName");
+		String supplementComment = request.getParameter("supplementComment");
+		
+		User user = findUserByName(userName);
+		Production production = findProductionByCode(productionCode);
+		Date date = string_to_Date(supplementDate);
+		
+		
+		supplement.setProduction(production);
+		supplement.setSupplementCode(supplementCode);
+		supplement.setSupplementComment(supplementComment);
+		supplement.setSupplementDate(date);
+		supplement.setSupplementState("0");
+		supplement.setSupplementType(supplementType);
+		supplement.setUser(user);
+		supplementCreateService.createSupplement(supplement);
+		
+		
+		
+		return SUCCESS;
+	}
+	
+	private Date string_to_Date(String supplementDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Production findProductionByCode(String productionCode) {
+		//ProductionService productionService = null;
+		return null;
+	}
+
+	private User findUserByName(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getShellAccessoryType() {
+		return shellAccessoryType;
+	}
+
+	public void setShellAccessoryType(String shellAccessoryType) {
+		this.shellAccessoryType = shellAccessoryType;
+	}
+
+	public String getMaterialCode() {
+		return materialCode;
+	}
+
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
+	}
+
+	public String getMaterialName() {
+		return materialName;
+	}
+
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+}
